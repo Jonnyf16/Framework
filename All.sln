@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.26430.14
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{6DE0AA68-F375-4C8C-B207-141BF71DF96F}"
 	ProjectSection(SolutionItems) = preProject
@@ -183,6 +183,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DMS.Geometry.Tests", "Test\DMS.Geometry.Tests\DMS.Geometry.Tests.csproj", "{DF096E15-AA81-4FFD-B360-2B12E812BF26}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DMS.OpenGL.Tests", "Test\DMS.OpenGL.Tests\DMS.OpenGL.Tests.csproj", "{87F3A725-6AF4-41F7-AA58-CACD9E23D6D9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BeanMachine", "SHADER\Examples\BeanMachine\BeanMachine.csproj", "{B6FA49BA-97F1-457B-8D25-B6F93780592E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -478,6 +480,10 @@ Global
 		{87F3A725-6AF4-41F7-AA58-CACD9E23D6D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{87F3A725-6AF4-41F7-AA58-CACD9E23D6D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{87F3A725-6AF4-41F7-AA58-CACD9E23D6D9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B6FA49BA-97F1-457B-8D25-B6F93780592E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B6FA49BA-97F1-457B-8D25-B6F93780592E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B6FA49BA-97F1-457B-8D25-B6F93780592E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B6FA49BA-97F1-457B-8D25-B6F93780592E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -559,5 +565,6 @@ Global
 		{EF31CB77-8ECF-4C5E-80A0-B0123C1C8647} = {60690206-8C29-45FF-B353-25286A9438CE}
 		{DF096E15-AA81-4FFD-B360-2B12E812BF26} = {BEE08292-7C95-44EC-B228-44ED81C09610}
 		{87F3A725-6AF4-41F7-AA58-CACD9E23D6D9} = {BEE08292-7C95-44EC-B228-44ED81C09610}
+		{B6FA49BA-97F1-457B-8D25-B6F93780592E} = {E6454C74-3D02-49DC-BF69-CCBD7CE40E25}
 	EndGlobalSection
 EndGlobal
