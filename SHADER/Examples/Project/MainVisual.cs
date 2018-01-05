@@ -14,8 +14,8 @@ namespace Example
 		public MainVisual()
 		{
             // plane setup
-			plane = new VisualPlane();
-            planeTex = TextureLoader.FromBitmap(Resourcen.tablecloth);
+            this.plane = new VisualPlane();
+            this.planeTex = TextureLoader.FromBitmap(Resourcen.tablecloth);
 
             // wind setup
             this.windDirection = new Vector3(0.0f);
@@ -34,23 +34,23 @@ namespace Example
             this.candleThickness = .15f;
 
             // smoke setup
-            smokeState = false;
+            this.smokeState = false;
             this.visualSmoke = new VisualSmoke(Vector3.Zero, this.windDirection);
 
             // camera setup
-			camera.FarClip = 20;
-			camera.Distance = 2;
-			camera.FovY = 70;
-			camera.Elevation = 15;
+            this.camera.FarClip = 20;
+            this.camera.Distance = 2;
+            this.camera.FovY = 70;
+            this.camera.Elevation = 15;
 
 			GL.Enable(EnableCap.DepthTest);
 		}
 
 		public void ShaderChanged(string name, Shader shader)
 		{
-			visualSmoke.ShaderChanged(name, shader);
-			visualRain.ShaderChanged(name, shader);
-            visualCloud.ShaderChanged(name, shader);
+            this.visualSmoke.ShaderChanged(name, shader);
+            this.visualRain.ShaderChanged(name, shader);
+            this.visualCloud.ShaderChanged(name, shader);
         }
 
 		public void Update(float time)
@@ -58,9 +58,9 @@ namespace Example
             KeyboardEvent();
             checkRainCandleCollision();
             glTimerUpdate.Activate(QueryTarget.TimeElapsed);
-			visualSmoke.Update(time, this.smokeState, this.candlePosition, this.windDirection);
-            visualRain.Update(time, this.rainState, this.rainPosition, this.windDirection);
-            visualCloud.Update(this.rainState, this.rainPosition);
+            this.visualSmoke.Update(time, this.smokeState, this.candlePosition, this.windDirection);
+            this.visualRain.Update(time, this.rainState, this.rainPosition, this.windDirection);
+            this.visualCloud.Update(this.rainState, this.rainPosition);
 			glTimerUpdate.Deactivate();
 		}
 
@@ -68,13 +68,13 @@ namespace Example
 		{
 			glTimerRender.Activate(QueryTarget.TimeElapsed);
 			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
-            var cam = camera.CalcMatrix().ToOpenTK();            
-            visualCloud.Render(cam);
-            planeTex.Activate();
-            plane.Draw(cam);
-            planeTex.Deactivate();
-            visualSmoke.Render(cam);
-            visualRain.Render(cam);
+            var cam = camera.CalcMatrix().ToOpenTK();
+            this.visualCloud.Render(cam);
+            this.planeTex.Activate();
+            this.plane.Draw(cam);
+            this.planeTex.Deactivate();
+            this.visualSmoke.Render(cam);
+            this.visualRain.Render(cam);
             glTimerRender.Deactivate();
 
 			Console.Write("Update:");
@@ -89,11 +89,11 @@ namespace Example
             if (candleState && rainState)
             {
                 // check if rain is above candle
-                if ((rainPosition[0]+windDirection[0] > (candlePosition[0] - candleThickness)) && (rainPosition[0] + windDirection[0] < candlePosition[0] + candleThickness) &&
-                    (rainPosition[2] + windDirection[2] > (candlePosition[2] - candleThickness)) && (rainPosition[2] + windDirection[2] < candlePosition[2] + candleThickness))
-                    smokeState = true;
+                if (((rainPosition[0] + windDirection[0]) > (candlePosition[0] - candleThickness)) && ((rainPosition[0] + windDirection[0]) < candlePosition[0] + candleThickness) &&
+                    ((rainPosition[2] + windDirection[2]) > (candlePosition[2] - candleThickness)) && ((rainPosition[2] + windDirection[2]) < candlePosition[2] + candleThickness))
+                    this.smokeState = true;
                 else
-                    smokeState = false;
+                    this.smokeState = false;
             }
             //Console.WriteLine("RainPosition: [{0}, {1}]", rainPosition[0], rainPosition[2]);
             //Console.WriteLine("CandlePosition: [{0}, {1}]", candlePosition[0], candlePosition[2]);
@@ -106,40 +106,44 @@ namespace Example
             keyboardState = OpenTK.Input.Keyboard.GetState();
             float movingSpeed = 0.01f;
 
+            // wind reset
+            if (keyboardState[Key.O])
+                this.windDirection = new Vector3(0.0f);
+
             // wind strength
-            if (keyboardState[Key.Right])
-                windDirection[0] += movingSpeed;
-            else if (keyboardState[Key.Left])
-                windDirection[0] -= movingSpeed;
-            else if (keyboardState[Key.Down])
-                windDirection[2] += movingSpeed;
-            else if (keyboardState[Key.Up])
-                windDirection[2] -= movingSpeed;
+            if (keyboardState[Key.L])
+                this.windDirection[0] += movingSpeed;
+            else if (keyboardState[Key.J])
+                this.windDirection[0] -= movingSpeed;
+            else if (keyboardState[Key.K])
+                this.windDirection[2] += movingSpeed;
+            else if (keyboardState[Key.I])
+                this.windDirection[2] -= movingSpeed;
 
             // rain toggle
             if (keyboardState[Key.Q])
-                rainState = true;
+                this.rainState = true;
             else if (keyboardState[Key.E])
-                rainState = false;
+                this.rainState = false;
 
             // rain movement
             if (rainState)
             {
                 if (keyboardState[Key.D])
-                    rainPosition[0] += movingSpeed;
+                    this.rainPosition[0] += movingSpeed;
                 else if (keyboardState[Key.A])
-                    rainPosition[0] -= movingSpeed;
+                    this.rainPosition[0] -= movingSpeed;
                 else if (keyboardState[Key.S])
-                    rainPosition[2] += movingSpeed;
+                    this.rainPosition[2] += movingSpeed;
                 else if (keyboardState[Key.W])
-                    rainPosition[2] -= movingSpeed;
+                    this.rainPosition[2] -= movingSpeed;
             }
 
             // smoke toggle
             if (keyboardState[Key.R])
-                smokeState = true;
+                this.smokeState = true;
             if (keyboardState[Key.T])
-                smokeState = false;
+                this.smokeState = false;
         }
 
         private CameraOrbit camera = new CameraOrbit();
