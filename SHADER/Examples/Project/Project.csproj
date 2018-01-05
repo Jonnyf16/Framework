@@ -118,6 +118,8 @@
   <ItemGroup>
     <None Include="packages.config" />
     <None Include="readme.md" />
+    <None Include="Resources\candle.obj" />
+    <None Include="Resources\cloud.obj" />
     <None Include="Resources\smoke.frag" />
     <None Include="Resources\plane.frag" />
     <None Include="Resources\smoke.vert" />
@@ -126,8 +128,8 @@
   <ItemGroup>
     <EmbeddedResource Include="Resourcen.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resourcen.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
+      <LastGenOutput>Resourcen.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
@@ -137,9 +139,11 @@
     <None Include="Resources\smoke_256a.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\suzanne.obj" />
     <None Include="Resources\water_splash.png" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Resources\tablecloth.jpg" />
     <Content Include="Resources\water_splash_original.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

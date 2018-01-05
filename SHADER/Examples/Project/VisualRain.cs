@@ -41,7 +41,7 @@ namespace Example
 		private void OnAfterParticleUpdate(Particle particle)
 		{
 			Func<float> Rnd01 = () => (float)random.NextDouble();
-			Func<float> RndCoord = () => Rnd01();
+			Func<float> RndCoord = () => (Rnd01() - 0.5f) * 2.0f;
 
 			//if collision with ground plane
 			if (particle.Position.Y < 0)
@@ -75,7 +75,7 @@ namespace Example
 			{
 				//fading with age effect
 				var age = time - particle.CreationTime;
-				fade[i] = 1f - age / particle.LifeTime;
+				fade[i] = 1f - age / particle.LifeTime * 1.5f;
 				positions[i] = particle.Position;
 				++i;
 			}

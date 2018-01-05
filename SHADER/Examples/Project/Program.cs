@@ -31,7 +31,7 @@ namespace Example
 			var dir = Path.GetDirectoryName(PathTools.GetSourceFilePath()) + "/Resources/";
 			resourceManager.AddShader(VisualSmoke.ShaderName, dir + "smoke.vert", dir + "smoke.frag"
 				, Resourcen.smoke_vert, Resourcen.smoke_frag);
-			resourceManager.AddShader(VisualRain.ShaderName, dir + "smoke.vert", dir + "smoke.frag"
+			resourceManager.AddShader(VisualRain.ShaderName, dir + "rain.vert", dir + "rain.frag"
 				, Resourcen.smoke_vert, Resourcen.smoke_frag);
 		}
 	}

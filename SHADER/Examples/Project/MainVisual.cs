@@ -15,6 +15,7 @@ namespace Example
 		{
             //plane setup
 			plane = new VisualPlane();
+            planeTex = TextureLoader.FromBitmap(Resourcen.tablecloth);
 
             // rain setup
             this.rainState = false;
@@ -31,6 +32,7 @@ namespace Example
             var wind = new Vector3(0.1f, 0, 0);
             this.visualSmoke = new VisualSmoke(Vector3.Zero, wind);
 
+            // camera setup
 			camera.FarClip = 20;
 			camera.Distance = 2;
 			camera.FovY = 70;
@@ -43,12 +45,15 @@ namespace Example
 		{
 			visualSmoke.ShaderChanged(name, shader);
 			visualRain.ShaderChanged(name, shader);
-		}
+            //load geometry
+            Mesh mesh = Obj2Mesh.FromObj(Resourcen.suzanne);
+            this.cloud = VAOLoader.FromMesh(mesh, shader);
+        }
 
 		public void Update(float time)
 		{
-            KeyboardEvent_rain();
-            checkCandleExtinction();
+            KeyboardEvent();
+            checkRainCandleCollision();
             glTimerUpdate.Activate(QueryTarget.TimeElapsed);
 			visualSmoke.Update(time, this.smokeState, this.candlePosition);
             visualRain.Update(time, this.rainState, this.rainPosition);
@@ -59,12 +64,15 @@ namespace Example
 		{
 			glTimerRender.Activate(QueryTarget.TimeElapsed);
 			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
-
-			var cam = camera.CalcMatrix().ToOpenTK();
-			plane.Draw(cam);
-			visualSmoke.Render(cam);
+            var cam = camera.CalcMatrix().ToOpenTK();
+            planeTex.Activate();
+            plane.Draw(cam);
+            planeTex.Deactivate();
+            
+            visualSmoke.Render(cam);
 		    visualRain.Render(cam);
-			glTimerRender.Deactivate();
+            this.cloud.Draw();
+            glTimerRender.Deactivate();
 
 			Console.Write("Update:");
 			Console.Write(glTimerUpdate.ResultLong / 1e6);
@@ -73,22 +81,23 @@ namespace Example
 			Console.WriteLine("msec");
 		}
 
-        private void checkCandleExtinction()
+        private void checkRainCandleCollision()
         {
             if (candleState && rainState)
             {
+                // check if rain is above candle
                 if ((rainPosition[0] > (candlePosition[0] - candleThickness)) && (rainPosition[0] < candlePosition[0] + candleThickness) &&
                     (rainPosition[2] > (candlePosition[2] - candleThickness)) && (rainPosition[2] < candlePosition[2] + candleThickness))
                     smokeState = true;
                 else
                     smokeState = false;
             }
-            Console.WriteLine("RainPosition: [{0}, {1}]", rainPosition[0], rainPosition[2]);
-            Console.WriteLine("CandlePosition: [{0}, {1}]", candlePosition[0], candlePosition[2]);
-            Console.WriteLine("Rain meets Candle: {0}", smokeState);
+            //Console.WriteLine("RainPosition: [{0}, {1}]", rainPosition[0], rainPosition[2]);
+            //Console.WriteLine("CandlePosition: [{0}, {1}]", candlePosition[0], candlePosition[2]);
+            //Console.WriteLine("Rain meets Candle: {0}", smokeState);
         }
 
-        private void KeyboardEvent_rain()
+        private void KeyboardEvent()
         {
             // Get current state
             keyboardState = OpenTK.Input.Keyboard.GetState();
@@ -128,6 +137,7 @@ namespace Example
 		private QueryObject glTimerUpdate = new QueryObject();
 
         // new shit
+        private Texture planeTex;
         KeyboardState keyboardState;
         private bool rainState;
         private Vector3 rainPosition;
@@ -135,6 +145,7 @@ namespace Example
         private Vector3 candlePosition;
         private float candleThickness;
         private bool smokeState;
+        private VAO cloud;
 
     }
 }
