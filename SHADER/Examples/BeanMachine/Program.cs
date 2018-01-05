@@ -10,7 +10,7 @@ namespace Example
 		[STAThread]
 		private static void Main()
 		{
-			var app = new ExampleApplication();
+            var app = new ExampleApplication();
 			var visual = new MainVisual();
 			app.ResourceManager.ShaderChanged += visual.ShaderChanged;
 			LoadResources(app.ResourceManager);
@@ -20,9 +20,8 @@ namespace Example
 
 		private static void LoadResources(ResourceManager resourceManager)
 		{
-			var dir = Path.GetDirectoryName(PathTools.GetSourceFilePath()) + @"\Resources\";
-			resourceManager.AddShader(MainVisual.ShaderName, dir + "vertex.vert", dir + "fragment.frag"
-				, Resourcen.vertex, Resourcen.fragment);
+            var dir = Path.GetDirectoryName(PathTools.GetSourceFilePath()) + @"\Resources\";
+			resourceManager.AddShader(MainVisual.ShaderName, dir + "vertex.vert", dir + "fragment.frag", Resourcen.vertex, Resourcen.fragment);
 		}
 	}
 }
