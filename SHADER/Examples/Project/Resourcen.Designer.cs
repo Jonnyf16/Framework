@@ -83,9 +83,9 @@ namespace Example {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
-        internal static byte[] cloud_frag {
+        internal static byte[] objects_frag {
             get {
-                object obj = ResourceManager.GetObject("cloud_frag", resourceCulture);
+                object obj = ResourceManager.GetObject("objects_frag", resourceCulture);
                 return ((byte[])(obj));
             }
         }
@@ -93,9 +93,9 @@ namespace Example {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
-        internal static byte[] cloud_vert {
+        internal static byte[] objects_vert {
             get {
-                object obj = ResourceManager.GetObject("cloud_vert", resourceCulture);
+                object obj = ResourceManager.GetObject("objects_vert", resourceCulture);
                 return ((byte[])(obj));
             }
         }
@@ -177,16 +177,6 @@ namespace Example {
             get {
                 object obj = ResourceManager.GetObject("table", resourceCulture);
                 return ((byte[])(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap tablecloth {
-            get {
-                object obj = ResourceManager.GetObject("tablecloth", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
             }
         }
         

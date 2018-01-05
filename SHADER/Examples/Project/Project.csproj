@@ -56,13 +56,14 @@
     <Compile Include="MainVisual.cs" />
     <Compile Include="Particle.cs" />
     <Compile Include="ParticleSystem.cs" />
+    <Compile Include="PhongShading.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Resourcen.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resourcen.resx</DependentUpon>
     </Compile>
-    <Compile Include="VisualCloud.cs" />
+    <Compile Include="VisualObjects.cs" />
     <Compile Include="VisualPlane.cs" />
     <Compile Include="VisualSmoke.cs" />
     <Compile Include="VisualRain.cs" />
@@ -121,8 +122,8 @@
     <None Include="readme.md" />
     <None Include="Resources\candle.obj" />
     <None Include="Resources\cloud.obj" />
-    <None Include="Resources\cloud_frag.frag" />
-    <None Include="Resources\cloud_vert.vert" />
+    <None Include="Resources\objects.frag" />
+    <None Include="Resources\objects.vert" />
     <None Include="Resources\smoke.frag" />
     <None Include="Resources\plane.frag" />
     <None Include="Resources\smoke.vert" />
@@ -147,7 +148,6 @@
     <None Include="Resources\water_splash.png" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Resources\tablecloth.jpg" />
     <Content Include="Resources\water_splash_original.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -15,7 +15,6 @@ namespace Example
 		{
             // plane setup
             this.plane = new VisualPlane();
-            this.planeTex = TextureLoader.FromBitmap(Resourcen.tablecloth);
 
             // wind setup
             this.windDirection = new Vector3(0.0f);
@@ -27,7 +26,7 @@ namespace Example
 
             // cloud setup
             this.cloudTranslation = new Vector3(.0f, .1f, .0f);
-            this.visualCloud = new VisualCloud(this.rainPosition);
+            this.visualCloud = new VisualObjects(this.rainPosition);
 
             // candle setup
             this.candleState = true;
@@ -71,9 +70,8 @@ namespace Example
 			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
             var cam = camera.CalcMatrix().ToOpenTK();
             this.visualCloud.Render(cam);
-            this.planeTex.Activate();
             this.plane.Draw(cam);
-            this.planeTex.Deactivate();
+
             this.visualSmoke.Render(cam);
             this.visualRain.Render(cam);
             glTimerRender.Deactivate();
@@ -152,13 +150,12 @@ namespace Example
         private VisualPlane plane;
 		private readonly VisualSmoke visualSmoke;
 		private readonly VisualRain visualRain;
-        private readonly VisualCloud visualCloud;
+        private readonly VisualObjects visualCloud;
 		private QueryObject glTimerRender = new QueryObject();
 		private QueryObject glTimerUpdate = new QueryObject();
 
         // new shit
         private Random random = new Random();
-        private Texture planeTex;
         KeyboardState keyboardState;
         private bool rainState;
         private Vector3 rainPosition;
