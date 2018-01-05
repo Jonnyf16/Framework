@@ -26,7 +26,7 @@ namespace Example
 			if (ShaderName != name) return;
 			this.shaderCloud = shader;
 			if (ReferenceEquals(shader, null)) return;
-			Mesh mesh = Obj2Mesh.FromObj(Resourcen.suzanne);
+			Mesh mesh = Obj2Mesh.FromObj(Resourcen.cloud);
 			this.cloud = VAOLoader.FromMesh(mesh, shader);
 		}
 
@@ -38,16 +38,13 @@ namespace Example
             // update parameters
             this.rainState = rainState;
             this.rainPosition = rainPosition;
-
             this.cloud.SetAttribute(shaderCloud.GetAttributeLocation("instancePosition"), new Vector3[] { this.rainPosition }, VertexAttribPointerType.Float, 3, true);
-            this.cloud.SetAttribute(shaderCloud.GetAttributeLocation("instanceScale"), new float[] { 0.3f }, VertexAttribPointerType.Float, 1, true);
         }
 
         public void Render(Matrix4 camera)
 		{
 			if (ReferenceEquals(null, shaderCloud)) return;
             this.cloud.SetAttribute(shaderCloud.GetAttributeLocation("instancePosition"), new Vector3[] { this.rainPosition }, VertexAttribPointerType.Float, 3, true);
-			this.cloud.SetAttribute(shaderCloud.GetAttributeLocation("instanceScale"), new float[] { 0.3f }, VertexAttribPointerType.Float, 1, true);
             
 			var time = (float)timeSource.Elapsed.TotalSeconds;
 

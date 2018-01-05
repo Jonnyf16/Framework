@@ -143,6 +143,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\suzanne.obj" />
+    <None Include="Resources\table.obj" />
     <None Include="Resources\water_splash.png" />
   </ItemGroup>
   <ItemGroup>

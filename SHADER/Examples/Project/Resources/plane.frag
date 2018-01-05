@@ -19,5 +19,5 @@ void main()
 	
 	//lookup color in texture at position uv
 	//vec3 tex_col = texture(planeTex, texCoordV).rgb;
-	color = vec4(texCoordV.x, 0.0, texCoordV.y, 1.0);
+	color = vec4(texCoordV.xy, 0.0, 1.0);
 }

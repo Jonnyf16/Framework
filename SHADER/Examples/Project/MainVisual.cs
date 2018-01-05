@@ -22,10 +22,11 @@ namespace Example
 
             // rain setup
             this.rainState = false;
-            this.rainPosition = new Vector3(-.5f, 1, -.5f);
+            this.rainPosition = new Vector3(-.5f, 1f, -.5f);
             this.visualRain = new VisualRain(this.rainPosition, this.windDirection);
 
             // cloud setup
+            this.cloudTranslation = new Vector3(.0f, .1f, .0f);
             this.visualCloud = new VisualCloud(this.rainPosition);
 
             // candle setup
@@ -38,7 +39,7 @@ namespace Example
             this.visualSmoke = new VisualSmoke(Vector3.Zero, this.windDirection);
 
             // camera setup
-            this.camera.FarClip = 20;
+            this.camera.FarClip = 40;
             this.camera.Distance = 2;
             this.camera.FovY = 70;
             this.camera.Elevation = 15;
@@ -60,7 +61,7 @@ namespace Example
             glTimerUpdate.Activate(QueryTarget.TimeElapsed);
             this.visualSmoke.Update(time, this.smokeState, this.candlePosition, this.windDirection);
             this.visualRain.Update(time, this.rainState, this.rainPosition, this.windDirection);
-            this.visualCloud.Update(this.rainState, this.rainPosition);
+            this.visualCloud.Update(this.rainState, this.rainPosition + this.cloudTranslation);
 			glTimerUpdate.Deactivate();
 		}
 
@@ -156,10 +157,12 @@ namespace Example
 		private QueryObject glTimerUpdate = new QueryObject();
 
         // new shit
+        private Random random = new Random();
         private Texture planeTex;
         KeyboardState keyboardState;
         private bool rainState;
         private Vector3 rainPosition;
+        private Vector3 cloudTranslation;
         private bool candleState;
         private Vector3 candlePosition;
         private float candleThickness;
