@@ -7,11 +7,12 @@ namespace Example
 {
 	public class VisualRain
 	{
-		public VisualRain(Vector3 rainStartPosition)
+		public VisualRain(Vector3 rainStartPosition, Vector3 windDirection)
 		{
             this.rainState = false;
             this.rainPosition = rainStartPosition;
-			texStar = TextureLoader.FromBitmap(Resourcen.water_splash);
+            this.windDirection = windDirection;
+            texStar = TextureLoader.FromBitmap(Resourcen.water_splash);
 			particleSystem.ReleaseInterval = 0.003f;
 			particleSystem.OnParticleCreate += Create;
 			particleSystem.OnAfterParticleUpdate += OnAfterParticleUpdate;
@@ -31,7 +32,7 @@ namespace Example
                 //start speed
                 p.Velocity = Vector3.Zero;
                 //downward gravity
-                p.Acceleration = new Vector3(0, -1.0f, 0);
+                p.Acceleration = new Vector3(0, -1.0f, 0) + this.windDirection;
             }
             else
                 p.LifeTime = 0f;
@@ -60,12 +61,13 @@ namespace Example
 			this.shaderWaterfall = shader;
 		}
 
-		public void Update(float time, bool rainState, Vector3 rainPosition)
+		public void Update(float time, bool rainState, Vector3 rainPosition, Vector3 windDirection)
 		{
 			if (ReferenceEquals(shaderWaterfall, null)) return;
             // update parameters
             this.rainState = rainState;
             this.rainPosition = rainPosition;
+            this.windDirection = windDirection;
             particleSystem.Update(time);
 			//gather all active particle positions into array
 			var positions = new Vector3[particleSystem.ParticleCount];
@@ -76,7 +78,8 @@ namespace Example
 				//fading with age effect
 				var age = time - particle.CreationTime;
 				fade[i] = 1f - age / particle.LifeTime * 1.5f;
-				positions[i] = particle.Position;
+                particle.Acceleration = new Vector3(0, -1.0f, 0) + this.windDirection;
+                positions[i] = particle.Position;
 				++i;
 			}
 
@@ -121,5 +124,7 @@ namespace Example
         // new shit
         private bool rainState;
         private Vector3 rainPosition;
-	}
+        private Vector3 windDirection;
+
+    }
 }

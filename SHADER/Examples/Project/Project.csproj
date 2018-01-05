@@ -62,6 +62,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resourcen.resx</DependentUpon>
     </Compile>
+    <Compile Include="VisualCloud.cs" />
     <Compile Include="VisualPlane.cs" />
     <Compile Include="VisualSmoke.cs" />
     <Compile Include="VisualRain.cs" />
@@ -120,6 +121,8 @@
     <None Include="readme.md" />
     <None Include="Resources\candle.obj" />
     <None Include="Resources\cloud.obj" />
+    <None Include="Resources\cloud_frag.frag" />
+    <None Include="Resources\cloud_vert.vert" />
     <None Include="Resources\smoke.frag" />
     <None Include="Resources\plane.frag" />
     <None Include="Resources\smoke.vert" />

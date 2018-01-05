@@ -45,10 +45,11 @@ namespace Example
 			this.shaderSmoke = shader;
 		}
 
-		public void Update(float time, bool smokeState, Vector3 smokePosition)
+		public void Update(float time, bool smokeState, Vector3 smokePosition, Vector3 windDirection)
 		{
             this.smokeState = smokeState;
             this.smokePosition = smokePosition;
+            this.windDirection = windDirection;
 
             if (ReferenceEquals(shaderSmoke, null)) return;
 			particleSystem.Update(time);

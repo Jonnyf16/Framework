@@ -83,6 +83,26 @@ namespace Example {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
+        internal static byte[] cloud_frag {
+            get {
+                object obj = ResourceManager.GetObject("cloud_frag", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] cloud_vert {
+            get {
+                object obj = ResourceManager.GetObject("cloud_vert", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
         internal static byte[] plane_frag {
             get {
                 object obj = ResourceManager.GetObject("plane_frag", resourceCulture);

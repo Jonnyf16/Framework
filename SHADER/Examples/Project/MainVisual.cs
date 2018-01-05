@@ -13,14 +13,20 @@ namespace Example
 
 		public MainVisual()
 		{
-            //plane setup
+            // plane setup
 			plane = new VisualPlane();
             planeTex = TextureLoader.FromBitmap(Resourcen.tablecloth);
+
+            // wind setup
+            this.windDirection = new Vector3(0.0f);
 
             // rain setup
             this.rainState = false;
             this.rainPosition = new Vector3(-.5f, 1, -.5f);
-            this.visualRain = new VisualRain(this.rainPosition);
+            this.visualRain = new VisualRain(this.rainPosition, this.windDirection);
+
+            // cloud setup
+            this.visualCloud = new VisualCloud(this.rainPosition);
 
             // candle setup
             this.candleState = true;
@@ -29,8 +35,7 @@ namespace Example
 
             // smoke setup
             smokeState = false;
-            var wind = new Vector3(0.1f, 0, 0);
-            this.visualSmoke = new VisualSmoke(Vector3.Zero, wind);
+            this.visualSmoke = new VisualSmoke(Vector3.Zero, this.windDirection);
 
             // camera setup
 			camera.FarClip = 20;
@@ -45,9 +50,7 @@ namespace Example
 		{
 			visualSmoke.ShaderChanged(name, shader);
 			visualRain.ShaderChanged(name, shader);
-            //load geometry
-            Mesh mesh = Obj2Mesh.FromObj(Resourcen.suzanne);
-            this.cloud = VAOLoader.FromMesh(mesh, shader);
+            visualCloud.ShaderChanged(name, shader);
         }
 
 		public void Update(float time)
@@ -55,8 +58,9 @@ namespace Example
             KeyboardEvent();
             checkRainCandleCollision();
             glTimerUpdate.Activate(QueryTarget.TimeElapsed);
-			visualSmoke.Update(time, this.smokeState, this.candlePosition);
-            visualRain.Update(time, this.rainState, this.rainPosition);
+			visualSmoke.Update(time, this.smokeState, this.candlePosition, this.windDirection);
+            visualRain.Update(time, this.rainState, this.rainPosition, this.windDirection);
+            visualCloud.Update(this.rainState, this.rainPosition);
 			glTimerUpdate.Deactivate();
 		}
 
@@ -64,14 +68,13 @@ namespace Example
 		{
 			glTimerRender.Activate(QueryTarget.TimeElapsed);
 			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
-            var cam = camera.CalcMatrix().ToOpenTK();
+            var cam = camera.CalcMatrix().ToOpenTK();            
+            visualCloud.Render(cam);
             planeTex.Activate();
             plane.Draw(cam);
             planeTex.Deactivate();
-            
             visualSmoke.Render(cam);
-		    visualRain.Render(cam);
-            this.cloud.Draw();
+            visualRain.Render(cam);
             glTimerRender.Deactivate();
 
 			Console.Write("Update:");
@@ -86,8 +89,8 @@ namespace Example
             if (candleState && rainState)
             {
                 // check if rain is above candle
-                if ((rainPosition[0] > (candlePosition[0] - candleThickness)) && (rainPosition[0] < candlePosition[0] + candleThickness) &&
-                    (rainPosition[2] > (candlePosition[2] - candleThickness)) && (rainPosition[2] < candlePosition[2] + candleThickness))
+                if ((rainPosition[0]+windDirection[0] > (candlePosition[0] - candleThickness)) && (rainPosition[0] + windDirection[0] < candlePosition[0] + candleThickness) &&
+                    (rainPosition[2] + windDirection[2] > (candlePosition[2] - candleThickness)) && (rainPosition[2] + windDirection[2] < candlePosition[2] + candleThickness))
                     smokeState = true;
                 else
                     smokeState = false;
@@ -102,6 +105,16 @@ namespace Example
             // Get current state
             keyboardState = OpenTK.Input.Keyboard.GetState();
             float movingSpeed = 0.01f;
+
+            // wind strength
+            if (keyboardState[Key.Right])
+                windDirection[0] += movingSpeed;
+            else if (keyboardState[Key.Left])
+                windDirection[0] -= movingSpeed;
+            else if (keyboardState[Key.Down])
+                windDirection[2] += movingSpeed;
+            else if (keyboardState[Key.Up])
+                windDirection[2] -= movingSpeed;
 
             // rain toggle
             if (keyboardState[Key.Q])
@@ -122,6 +135,7 @@ namespace Example
                     rainPosition[2] -= movingSpeed;
             }
 
+            // smoke toggle
             if (keyboardState[Key.R])
                 smokeState = true;
             if (keyboardState[Key.T])
@@ -133,6 +147,7 @@ namespace Example
         private VisualPlane plane;
 		private readonly VisualSmoke visualSmoke;
 		private readonly VisualRain visualRain;
+        private readonly VisualCloud visualCloud;
 		private QueryObject glTimerRender = new QueryObject();
 		private QueryObject glTimerUpdate = new QueryObject();
 
@@ -145,7 +160,7 @@ namespace Example
         private Vector3 candlePosition;
         private float candleThickness;
         private bool smokeState;
-        private VAO cloud;
+        private Vector3 windDirection;
 
     }
 }
