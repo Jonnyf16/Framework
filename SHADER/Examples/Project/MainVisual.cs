@@ -23,7 +23,7 @@ namespace Example
 
             // cloud setup
             this.cloudTranslation = new Vector3(.0f, .1f, .0f);
-            this.visualCloud = new VisualObjects(this.rainPosition);
+            this.visualObjects = new VisualObjects(this.rainPosition);
 
             // candle setup
             this.candleState = true;
@@ -47,7 +47,7 @@ namespace Example
 		{
             this.visualSmoke.ShaderChanged(name, shader);
             this.visualRain.ShaderChanged(name, shader);
-            this.visualCloud.ShaderChanged(name, shader);
+            this.visualObjects.ShaderChanged(name, shader);
         }
 
 		public void Update(float time)
@@ -57,7 +57,7 @@ namespace Example
             glTimerUpdate.Activate(QueryTarget.TimeElapsed);
             this.visualSmoke.Update(time, this.smokeState, this.candlePosition, this.windDirection);
             this.visualRain.Update(time, this.rainState, this.rainPosition, this.windDirection);
-            this.visualCloud.Update(this.rainState, this.rainPosition + this.cloudTranslation);
+            this.visualObjects.Update(this.rainState, this.rainPosition + this.cloudTranslation);
 			glTimerUpdate.Deactivate();
 		}
 
@@ -66,7 +66,7 @@ namespace Example
 			glTimerRender.Activate(QueryTarget.TimeElapsed);
 			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
             var cam = camera.CalcMatrix().ToOpenTK();
-            this.visualCloud.Render(cam);
+            this.visualObjects.Render(cam);
 
             this.visualSmoke.Render(cam);
             this.visualRain.Render(cam);
@@ -144,7 +144,7 @@ namespace Example
         private CameraOrbit camera = new CameraOrbit();
 		private readonly VisualSmoke visualSmoke;
 		private readonly VisualRain visualRain;
-        private readonly VisualObjects visualCloud;
+        private readonly VisualObjects visualObjects;
 		private QueryObject glTimerRender = new QueryObject();
 		private QueryObject glTimerUpdate = new QueryObject();
 

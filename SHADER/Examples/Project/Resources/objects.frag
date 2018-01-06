@@ -34,8 +34,8 @@ float specular(vec3 n, vec3 l, vec3 v, float shininess)
 void main() 
 {
 	bool dir_light = false;
-	bool point_light = true;
-	bool spot_light = false;
+	bool point_light = false;
+	bool spot_light = true;
 	
 	vec4 light1 = vec4(0.0);
 	vec4 light2 = vec4(0.0);
