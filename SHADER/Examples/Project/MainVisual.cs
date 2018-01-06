@@ -13,6 +13,9 @@ namespace Example
 
 		public MainVisual()
 		{
+            // light setup
+            this.lightPosition = new Vector3(0, 1, 0);
+
             // wind setup
             this.windDirection = new Vector3(0.0f);
 
@@ -23,7 +26,7 @@ namespace Example
 
             // cloud setup
             this.cloudTranslation = new Vector3(.0f, .1f, .0f);
-            this.visualObjects = new VisualObjects(this.rainPosition);
+            this.visualObjects = new VisualObjects(this.rainPosition, this.lightPosition);
 
             // candle setup
             this.candleState = true;
@@ -39,8 +42,6 @@ namespace Example
             this.camera.Distance = 3;
             this.camera.FovY = 70;
             this.camera.Elevation = 15;
-
-			GL.Enable(EnableCap.DepthTest);
 		}
 
 		public void ShaderChanged(string name, Shader shader)
@@ -57,7 +58,7 @@ namespace Example
             glTimerUpdate.Activate(QueryTarget.TimeElapsed);
             this.visualSmoke.Update(time, this.smokeState, this.candlePosition, this.windDirection);
             this.visualRain.Update(time, this.rainState, this.rainPosition, this.windDirection);
-            this.visualObjects.Update(this.rainState, this.rainPosition + this.cloudTranslation);
+            this.visualObjects.Update(this.rainState, this.rainPosition + this.cloudTranslation, this.lightPosition);
 			glTimerUpdate.Deactivate();
 		}
 
@@ -67,7 +68,6 @@ namespace Example
 			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
             var cam = camera.CalcMatrix().ToOpenTK();
             this.visualObjects.Render(cam);
-
             this.visualSmoke.Render(cam);
             this.visualRain.Render(cam);
             glTimerRender.Deactivate();
@@ -139,6 +139,20 @@ namespace Example
                 this.smokeState = true;
             if (keyboardState[Key.T])
                 this.smokeState = false;
+
+            // light movement
+            if (keyboardState[Key.Right])
+                this.lightPosition[0] += movingSpeed;
+            else if (keyboardState[Key.Left])
+                this.lightPosition[0] -= movingSpeed;
+            else if (keyboardState[Key.Down])
+                this.lightPosition[2] += movingSpeed;
+            else if (keyboardState[Key.Up])
+                this.lightPosition[2] -= movingSpeed;
+            else if (keyboardState[Key.PageDown])
+                this.lightPosition[1] -= movingSpeed;
+            else if (keyboardState[Key.PageUp])
+                this.lightPosition[1] += movingSpeed;
         }
 
         private CameraOrbit camera = new CameraOrbit();
@@ -159,6 +173,7 @@ namespace Example
         private float candleThickness;
         private bool smokeState;
         private Vector3 windDirection;
+        private Vector3 lightPosition;
 
     }
 }

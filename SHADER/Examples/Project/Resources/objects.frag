@@ -34,8 +34,8 @@ float specular(vec3 n, vec3 l, vec3 v, float shininess)
 void main() 
 {
 	bool dir_light = false;
-	bool point_light = false;
-	bool spot_light = true;
+	bool point_light = true;
+	bool spot_light = false;
 	
 	vec4 light1 = vec4(0.0);
 	vec4 light2 = vec4(0.0);
@@ -57,7 +57,7 @@ void main()
 	//point light
 	if (point_light)
 	{
-		vec3 light2l = normalize(light2Position - pos);
+		vec3 light2l = normalize(light2Position + pos);
 		light2 = materialColor * light2Color * lambert(normal, light2l)
 					+ light2Color * specular(normal, light2l, v, 100);
 	}
@@ -65,7 +65,7 @@ void main()
 	//spot light
 	if (spot_light)
 	{
-		vec3 light3l = normalize(light3Position - pos);
+		vec3 light3l = normalize(light3Position + pos);
 		if(acos(dot(light3l, -light3Direction)) < light3Angle)
 		{
 			light3 = materialColor * light3Color * lambert(normal, light3l)
