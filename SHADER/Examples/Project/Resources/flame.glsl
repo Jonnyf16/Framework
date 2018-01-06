@@ -51,29 +51,34 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord )
 	flameCoord.x *= 5.0;
 	flameCoord.y *= 2.0;
 
-    // strength of flame
+    // flame parameters
 	float strength = 5.0;
-    float speed = 5.0;
+    float speed = 3.0;
+    float disort_ver = 2.0*sin(iTime);
+    float disort_hor = disort_ver;
     
     // creates background noise
 	float fbm_ = fbm(strength * flameCoord - vec2(0, iTime * speed));
     
     // hight
-    float height = (1.0 - uv.y) * 2.0;
+    float height = (1.0 - flameCoord.y * 0.55) * 2.0;
 
-    // movement parameters (best between -2.0 and 2.0)
-    float disort_Aver = 2.0*sin(iTime);
-    float disort_hor = disort_ver;
-    
     // shape
-	float shape = 1.0 - 20. * max(0.0, (length(flameCoord * vec2(1.0 + flameCoord.y * 2.5, 0.7 * disort_ver) - flameCoord.y * disort_hor)) - (fbm_ * max(0.0, flameCoord.y + 0.25)));
-    //float edge_sharpness = 3.0;
-    //float shape = 1.0 - pow( (pow(flameCoord.x, 2.0) - pow(flameCoord.y, 1.0)), edge_sharpness);
+    float shape_ = max(0.0, (length(flameCoord * vec2(1.0 + flameCoord.y * 2.5, 0.7 * disort_ver) - flameCoord.y * disort_hor)) - (fbm_ * max(0.0, flameCoord.y + 0.25)));
+	float shape = 1.0 - 20. * pow(shape_, 0.5);
 
     // create the flame...
 	float flame = fbm_ * shape * height;
 	flame=clamp(flame,0.,1.);
 	    
+    // clamp top
+    if(flameCoord.y < -0.25)
+        flame = 0.0;
+    
+    // clamp bottom
+    if(flameCoord.y > 1.82)
+        flame = 0.0;
+    
     // color
 	vec3 col = vec3(1.5 * flame, 1.5 * pow(flame, 3.0), pow(flame, 6.0));
 	fragColor = vec4(vec3(col), 1.0);
