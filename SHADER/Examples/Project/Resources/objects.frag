@@ -15,7 +15,6 @@ uniform vec4 light3Color;
 
 in vec3 pos;
 in vec3 n;
-in vec4 geroud_color;
 
 out vec4 color;
 
@@ -57,9 +56,14 @@ void main()
 	//point light
 	if (point_light)
 	{
-		vec3 light2l = normalize(light2Position + pos);
-		light2 = materialColor * light2Color * lambert(normal, light2l)
-					+ light2Color * specular(normal, light2l, v, 100);
+		vec3 normal = normalize(n);
+		vec3 v = normalize(cameraPosition - pos);
+		vec3 l = normalize(light2Position - pos);
+
+		//point light
+		light2 = light2Color * (ambientLightColor + light2Color * lambert(n, l)) + light2Color * specular(n, l, v, 100);
+
+		//light2 = materialColor * light2Color * lambert(normal, light2l)+ light2Color * specular(normal, light2l, v, 100);
 	}
 
 	//spot light
@@ -68,8 +72,7 @@ void main()
 		vec3 light3l = normalize(light3Position + pos);
 		if(acos(dot(light3l, -light3Direction)) < light3Angle)
 		{
-			light3 = materialColor * light3Color * lambert(normal, light3l)
-					+ light3Color * specular(normal, light3l, v, 100);
+			light3 = materialColor * light3Color * lambert(normal, light3l) + light3Color * specular(normal, light3l, v, 100);
 		}
 	}
 

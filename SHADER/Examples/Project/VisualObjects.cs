@@ -35,6 +35,7 @@ namespace Example
 			this.shaderObject = shader;
 			if (ReferenceEquals(shader, null)) return;
 
+            /**
             // cloud
             Mesh cloudMesh = Obj2Mesh.FromObj(Resourcen.cloud);
             this.cloud = VAOLoader.FromMesh(cloudMesh, shader);
@@ -44,18 +45,17 @@ namespace Example
             // light
             Mesh lightSphereMesh = Meshes.CreateSphere(0.25f, 4);
             this.lightSphere = VAOLoader.FromMesh(lightSphereMesh, shader);
+            **/
 
-            /**
             var mesh = new Mesh();
-            //var sphere = Meshes.CreateSphere(1, 4);
-            //mesh.Add(sphere.Transform(System.Numerics.Matrix4x4.CreateTranslation(rainPosition[0], rainPosition[1], rainPosition[2])));
+            var lightSphereMesh = Meshes.CreateSphere(0.25f, 4);
+            mesh.Add(lightSphereMesh.Transform(System.Numerics.Matrix4x4.CreateTranslation(lightPosition[0], lightPosition[1], lightPosition[2])));
             var xform = new Transformation();
             var cloud = Obj2Mesh.FromObj(Resourcen.cloud);
-            mesh.Add(cloud.Transform(System.Numerics.Matrix4x4.CreateTranslation(0, 8, 0)));
+            mesh.Add(cloud.Transform(System.Numerics.Matrix4x4.CreateTranslation(rainPosition[0], rainPosition[1], rainPosition[2])));
             var table = Obj2Mesh.FromObj(Resourcen.table);
-            mesh.Add(table);
+            mesh.Add(table.Transform(System.Numerics.Matrix4x4.CreateTranslation(tablePosition[0], tablePosition[1]-4f, tablePosition[2])));
             this.geometry = VAOLoader.FromMesh(mesh, shader);
-            **/
         }
 
 		public CameraOrbit Camera { get { return camera; } }
@@ -67,10 +67,11 @@ namespace Example
             this.rainState = rainState;
             this.rainPosition = rainPosition;
             this.lightPosition = lightPosition;
-            this.cloud.SetAttribute(shaderObject.GetAttributeLocation("instancePosition"), new Vector3[] { this.rainPosition }, VertexAttribPointerType.Float, 3, true);
-            this.table.SetAttribute(shaderObject.GetAttributeLocation("instancePosition"), new Vector3[] { this.tablePosition }, VertexAttribPointerType.Float, 3, true);
-            this.table.SetAttribute(shaderObject.GetAttributeLocation("instancePosition"), new Vector3[] { this.lightPosition }, VertexAttribPointerType.Float, 3, true);
-            //this.geometry.SetAttribute(shaderObject.GetAttributeLocation("instancePosition"), new Vector3[] { new Vector3(0, -2.0f, 0) }, VertexAttribPointerType.Float, 3, true);
+            //this.cloud.SetAttribute(shaderObject.GetAttributeLocation("instancePosition"), new Vector3[] { this.rainPosition }, VertexAttribPointerType.Float, 3, true);
+            //this.table.SetAttribute(shaderObject.GetAttributeLocation("instancePosition"), new Vector3[] { this.tablePosition }, VertexAttribPointerType.Float, 3, true);
+            //this.table.SetAttribute(shaderObject.GetAttributeLocation("instancePosition"), new Vector3[] { this.lightPosition }, VertexAttribPointerType.Float, 3, true);
+            this.geometry.SetAttribute(shaderObject.GetAttributeLocation("instancePosition"), new Vector3[] { new Vector3(0) }, VertexAttribPointerType.Float, 3, true);
+            
         }
 
         public void Render(Matrix4 camera)
@@ -78,12 +79,13 @@ namespace Example
             if (ReferenceEquals(null, shaderObject)) return;
             var time = (float)timeSource.Elapsed.TotalSeconds;
 			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
-
 			shaderObject.Activate();
+
+            // pass shader parameters
 			GL.Uniform1(shaderObject.GetUniformLocation("time"), time);
             GL.Uniform3(shaderObject.GetUniformLocation("light1Direction"), new Vector3(-1, -1, -1).Normalized());
             GL.Uniform4(shaderObject.GetUniformLocation("light1Color"), new Color4(0f, 1f, 0f, 1f));
-            GL.Uniform3(shaderObject.GetUniformLocation("light2Position"), new Vector3(lightPosition[0], -.5f, lightPosition[2]).Normalized());
+            GL.Uniform3(shaderObject.GetUniformLocation("light2Position"), new Vector3(lightPosition[0], 1.5f, lightPosition[2]));
             GL.Uniform4(shaderObject.GetUniformLocation("light2Color"), new Color4(1f, 0f, 0f, 1f));
             GL.Uniform3(shaderObject.GetUniformLocation("light3Position"), lightPosition.Normalized());
             GL.Uniform3(shaderObject.GetUniformLocation("light3Direction"), new Vector3(lightPosition[0]*(-1), -1.1f, lightPosition[2]*(-1)).Normalized());
@@ -96,6 +98,8 @@ namespace Example
             GL.Uniform3(shaderObject.GetUniformLocation("cameraPosition"), this.camera.CalcPosition().ToOpenTK());
             GL.UniformMatrix4(shaderObject.GetUniformLocation("camera"), true, ref camera);
             
+            /**
+            // draw objects
             if (this.rainState)
             {
                 this.cloud.SetAttribute(shaderObject.GetAttributeLocation("instancePosition"), new Vector3[] { this.rainPosition }, VertexAttribPointerType.Float, 3, true);
@@ -105,8 +109,9 @@ namespace Example
             this.table.Draw();
             this.lightSphere.SetAttribute(shaderObject.GetAttributeLocation("instancePosition"), new Vector3[] { this.lightPosition }, VertexAttribPointerType.Float, 3, true);
             this.lightSphere.Draw();
+            **/
 
-            //geometry.Draw();
+            geometry.Draw();
             shaderObject.Deactivate();
 		}
 
@@ -117,7 +122,7 @@ namespace Example
         private VAO cloud;
         private VAO table;
         private VAO lightSphere;
-        //private VAO geometry;
+        private VAO geometry;
         private CameraOrbit camera = new CameraOrbit();
 
         private Vector3 rainPosition;
