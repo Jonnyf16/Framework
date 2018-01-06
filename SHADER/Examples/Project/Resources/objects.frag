@@ -19,44 +19,60 @@ in vec4 geroud_color;
 
 out vec4 color;
 
+float lambert(vec3 n, vec3 l)
+{
+	return max(0, dot(n, l));
+}
+
+float specular(vec3 n, vec3 l, vec3 v, float shininess)
+{
+	//if(0 > dot(n, l)) return 0;
+	vec3 r = reflect(-l, n);
+	return pow(max(0, dot(r, v)), shininess);
+}
+
 void main() 
 {
+	bool dir_light = false;
+	bool point_light = true;
+	bool spot_light = false;
+	
+	vec4 light1 = vec4(0.0);
+	vec4 light2 = vec4(0.0);
+	vec4 light3 = vec4(0.0);
+	
+	// general setup
 	vec3 normal = normalize(n);
-	vec3 cameraDirection = normalize(pos - cameraPosition);
-	vec4 color_ambient = vec4(0.0);
-	vec4 color_diffuse = vec4(0.0);
-	vec4 color_specular = vec4(0.0);
-	vec3 r;
-	
-	
-	// Phong shading because lighting calculation is inside fragment shader
-	// directional light
-	color_ambient = ambientLightColor * materialColor;
-	color_diffuse = materialColor * light1Color * dot(normal, -light1Direction);
-	r = normalize(2 * dot(normal, -light1Direction) * normal - (-light1Direction));
-	color_specular = materialColor * light1Color * max(0, pow(dot(r, -cameraDirection), 64));
-	
-	// point light
-	vec3 pointlightDirection = normalize(pos -light2Position);
-	color_ambient += ambientLightColor * materialColor;
-	color_diffuse += materialColor * light2Color * dot(normal, -pointlightDirection);
-	r = normalize(2 * dot(normal, -pointlightDirection) * normal - (-pointlightDirection));
-	color_specular += materialColor * light2Color * max(0, pow(dot(r, -cameraDirection), 64));
-	
-	
-	// spot light
-	vec3 spotlightDirection = normalize(pos -light3Position);
-	// check if point is inside light cone
-	if (acos(dot(-spotlightDirection, -light3Direction)) < light3Angle)
+	vec3 v = normalize(cameraPosition - pos);
+	//ambient lighting
+	vec4 ambient = ambientLightColor * materialColor;
+
+	//directional light
+	if (dir_light)
 	{
-		color_ambient += ambientLightColor * materialColor;
-		color_diffuse += materialColor * light3Color * dot(normal, -spotlightDirection);
-		r = normalize(2 * dot(normal, -spotlightDirection) * normal - (-spotlightDirection));
-		color_specular += materialColor * light3Color * max(0, pow(dot(r, -cameraDirection), 64));
+		light1 = materialColor * light1Color * lambert(normal, -light1Direction);
+				 + light1Color * specular(normal, -light1Direction, v, 100);
 	}
-	
-	vec4 phong_color = color_ambient + color_diffuse + color_specular;
-	
-	color =  phong_color;
-	//color = geroud_color;
+
+	//point light
+	if (point_light)
+	{
+		vec3 light2l = normalize(light2Position - pos);
+		light2 = materialColor * light2Color * lambert(normal, light2l)
+					+ light2Color * specular(normal, light2l, v, 100);
+	}
+
+	//spot light
+	if (spot_light)
+	{
+		vec3 light3l = normalize(light3Position - pos);
+		if(acos(dot(light3l, -light3Direction)) < light3Angle)
+		{
+			light3 = materialColor * light3Color * lambert(normal, light3l)
+					+ light3Color * specular(normal, light3l, v, 100);
+		}
+	}
+
+	//combine
+	color = ambient	+ light1 + light2 + light3;
 }

@@ -56,7 +56,6 @@
     <Compile Include="MainVisual.cs" />
     <Compile Include="Particle.cs" />
     <Compile Include="ParticleSystem.cs" />
-    <Compile Include="PhongShading.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Resourcen.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -64,7 +63,6 @@
       <DependentUpon>Resourcen.resx</DependentUpon>
     </Compile>
     <Compile Include="VisualObjects.cs" />
-    <Compile Include="VisualPlane.cs" />
     <Compile Include="VisualSmoke.cs" />
     <Compile Include="VisualRain.cs" />
   </ItemGroup>

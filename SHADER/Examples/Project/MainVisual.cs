@@ -13,9 +13,6 @@ namespace Example
 
 		public MainVisual()
 		{
-            // plane setup
-            this.plane = new VisualPlane();
-
             // wind setup
             this.windDirection = new Vector3(0.0f);
 
@@ -30,7 +27,7 @@ namespace Example
 
             // candle setup
             this.candleState = true;
-            this.candlePosition = new Vector3(.2f, 0, 0);
+            this.candlePosition = new Vector3(.0f);
             this.candleThickness = .15f;
 
             // smoke setup
@@ -39,7 +36,7 @@ namespace Example
 
             // camera setup
             this.camera.FarClip = 40;
-            this.camera.Distance = 2;
+            this.camera.Distance = 3;
             this.camera.FovY = 70;
             this.camera.Elevation = 15;
 
@@ -70,7 +67,6 @@ namespace Example
 			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
             var cam = camera.CalcMatrix().ToOpenTK();
             this.visualCloud.Render(cam);
-            this.plane.Draw(cam);
 
             this.visualSmoke.Render(cam);
             this.visualRain.Render(cam);
@@ -146,8 +142,6 @@ namespace Example
         }
 
         private CameraOrbit camera = new CameraOrbit();
-
-        private VisualPlane plane;
 		private readonly VisualSmoke visualSmoke;
 		private readonly VisualRain visualRain;
         private readonly VisualObjects visualCloud;

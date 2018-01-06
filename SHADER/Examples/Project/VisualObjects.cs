@@ -14,7 +14,7 @@ namespace Example
 		{
             this.rainState = false;
             this.rainPosition = rainPosition;
-            this.tablePosition = new Vector3(.0f, -2.72f, .0f);
+            this.tablePosition = new Vector3(.0f, -1.93f, .0f);
 
             camera.FarClip = 500;
 			camera.Distance = 30;
@@ -28,9 +28,10 @@ namespace Example
 			if (ShaderName != name) return;
 			this.shaderCloud = shader;
 			if (ReferenceEquals(shader, null)) return;
+
             // cloud
-			Mesh cloudMesh = Obj2Mesh.FromObj(Resourcen.cloud);
-			this.cloud = VAOLoader.FromMesh(cloudMesh, shader);
+            Mesh cloudMesh = Obj2Mesh.FromObj(Resourcen.cloud);
+            this.cloud = VAOLoader.FromMesh(cloudMesh, shader);
             // table
             Mesh tableMesh = Obj2Mesh.FromObj(Resourcen.table);
             this.table = VAOLoader.FromMesh(tableMesh, shader);
@@ -50,30 +51,32 @@ namespace Example
 
         public void Render(Matrix4 camera)
 		{
-			if (ReferenceEquals(null, shaderCloud)) return;
-            this.cloud.SetAttribute(shaderCloud.GetAttributeLocation("instancePosition"), new Vector3[] { this.rainPosition }, VertexAttribPointerType.Float, 3, true);
-            this.table.SetAttribute(shaderCloud.GetAttributeLocation("instancePosition"), new Vector3[] { this.tablePosition }, VertexAttribPointerType.Float, 3, true);
+            if (ReferenceEquals(null, shaderCloud)) return;
             var time = (float)timeSource.Elapsed.TotalSeconds;
 			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
 			shaderCloud.Activate();
 			GL.Uniform1(shaderCloud.GetUniformLocation("time"), time);
             GL.Uniform3(shaderCloud.GetUniformLocation("light1Direction"), new Vector3(-1, -1, -1).Normalized());
-            GL.Uniform4(shaderCloud.GetUniformLocation("light1Color"), new Color4(1f, 1f, 1f, 1f));
-            GL.Uniform3(shaderCloud.GetUniformLocation("light2Position"), new Vector3(-1, -1, 1));
-            GL.Uniform4(shaderCloud.GetUniformLocation("light2Color"), new Color4(1f, .1f, .1f, 1f));
-            GL.Uniform3(shaderCloud.GetUniformLocation("light3Position"), new Vector3(-2, 2, 2));
-            GL.Uniform3(shaderCloud.GetUniformLocation("light3Direction"), new Vector3(1, -1, -1).Normalized());
+            GL.Uniform4(shaderCloud.GetUniformLocation("light1Color"), new Color4(0f, 1f, 0f, 1f));
+            GL.Uniform3(shaderCloud.GetUniformLocation("light2Position"), new Vector3(0.0f, 0.1f, 0.0f).Normalized());
+            GL.Uniform4(shaderCloud.GetUniformLocation("light2Color"), new Color4(1f, 0f, 0f, 1f));
+            GL.Uniform3(shaderCloud.GetUniformLocation("light3Position"), new Vector3(0, 2, 0));
+            GL.Uniform3(shaderCloud.GetUniformLocation("light3Direction"), new Vector3(0, -0.1f, 0).Normalized());
             GL.Uniform1(shaderCloud.GetUniformLocation("light3Angle"), DMS.Geometry.MathHelper.DegreesToRadians(10f));
             GL.Uniform4(shaderCloud.GetUniformLocation("light3Color"), new Color4(0, 0, 1f, 1f));
-            GL.Uniform4(shaderCloud.GetUniformLocation("ambientLightColor"), new Color4(.1f, .1f, .1f, 1f));
-            GL.Uniform4(shaderCloud.GetUniformLocation("materialColor"), new Color4(.7f, .9f, .7f, 1f));
+            GL.Uniform4(shaderCloud.GetUniformLocation("ambientLightColor"), new Color4(0.1f, 0.1f, 0.1f, 1f));
+            GL.Uniform4(shaderCloud.GetUniformLocation("materialColor"), new Color4(1f, 1f, 1f, 1f));
             var cam = this.camera.CalcMatrix().ToOpenTK();
             GL.UniformMatrix4(shaderCloud.GetUniformLocation("camera"), true, ref cam);
             GL.Uniform3(shaderCloud.GetUniformLocation("cameraPosition"), this.camera.CalcPosition().ToOpenTK());
             GL.UniformMatrix4(shaderCloud.GetUniformLocation("camera"), true, ref camera);
             if (this.rainState)
+            {
+                this.cloud.SetAttribute(shaderCloud.GetAttributeLocation("instancePosition"), new Vector3[] { this.rainPosition }, VertexAttribPointerType.Float, 3, true);
                 this.cloud.Draw();
+            }
+            this.table.SetAttribute(shaderCloud.GetAttributeLocation("instancePosition"), new Vector3[] { this.tablePosition }, VertexAttribPointerType.Float, 3, true);
             this.table.Draw();
 			shaderCloud.Deactivate();
 		}
