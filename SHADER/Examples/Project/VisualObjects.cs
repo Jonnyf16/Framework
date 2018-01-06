@@ -35,10 +35,10 @@ namespace Example
 			this.shaderObject = shader;
 			if (ReferenceEquals(shader, null)) return;
 
-            /**
             // cloud
             Mesh cloudMesh = Obj2Mesh.FromObj(Resourcen.cloud);
             this.cloud = VAOLoader.FromMesh(cloudMesh, shader);
+            /**
             // table
             Mesh tableMesh = Obj2Mesh.FromObj(Resourcen.table);
             this.table = VAOLoader.FromMesh(tableMesh, shader);
@@ -47,14 +47,19 @@ namespace Example
             this.lightSphere = VAOLoader.FromMesh(lightSphereMesh, shader);
             **/
 
+            // All objects together
             var mesh = new Mesh();
+            // sphere
             var lightSphereMesh = Meshes.CreateSphere(0.25f, 4);
             mesh.Add(lightSphereMesh.Transform(System.Numerics.Matrix4x4.CreateTranslation(lightPosition[0], lightPosition[1], lightPosition[2])));
-            var xform = new Transformation();
-            var cloud = Obj2Mesh.FromObj(Resourcen.cloud);
-            mesh.Add(cloud.Transform(System.Numerics.Matrix4x4.CreateTranslation(rainPosition[0], rainPosition[1], rainPosition[2])));
+            // cloud
+            //var cloud = Obj2Mesh.FromObj(Resourcen.cloud);
+            //mesh.Add(cloud.Transform(System.Numerics.Matrix4x4.CreateTranslation(rainPosition[0], rainPosition[1], rainPosition[2])));
+            // table
             var table = Obj2Mesh.FromObj(Resourcen.table);
-            mesh.Add(table.Transform(System.Numerics.Matrix4x4.CreateTranslation(tablePosition[0], tablePosition[1]-4f, tablePosition[2])));
+            mesh.Add(table.Transform(System.Numerics.Matrix4x4.CreateTranslation(tablePosition[0], tablePosition[1] - 4f, tablePosition[2])));
+            var candle = Obj2Mesh.FromObj(Resourcen.candle);
+            mesh.Add(candle.Transform(System.Numerics.Matrix4x4.CreateTranslation(0, 0.5f, 0)));
             this.geometry = VAOLoader.FromMesh(mesh, shader);
         }
 
@@ -67,11 +72,11 @@ namespace Example
             this.rainState = rainState;
             this.rainPosition = rainPosition;
             this.lightPosition = lightPosition;
-            //this.cloud.SetAttribute(shaderObject.GetAttributeLocation("instancePosition"), new Vector3[] { this.rainPosition }, VertexAttribPointerType.Float, 3, true);
+            this.cloud.SetAttribute(shaderObject.GetAttributeLocation("instancePosition"), new Vector3[] { this.rainPosition }, VertexAttribPointerType.Float, 3, true);
             //this.table.SetAttribute(shaderObject.GetAttributeLocation("instancePosition"), new Vector3[] { this.tablePosition }, VertexAttribPointerType.Float, 3, true);
             //this.table.SetAttribute(shaderObject.GetAttributeLocation("instancePosition"), new Vector3[] { this.lightPosition }, VertexAttribPointerType.Float, 3, true);
-            this.geometry.SetAttribute(shaderObject.GetAttributeLocation("instancePosition"), new Vector3[] { new Vector3(0) }, VertexAttribPointerType.Float, 3, true);
-            
+            this.geometry.SetAttribute(shaderObject.GetAttributeLocation("instancePosition"), new Vector3[] { new Vector3(0) }, VertexAttribPointerType.Float, 3, false);
+
         }
 
         public void Render(Matrix4 camera)
@@ -97,14 +102,14 @@ namespace Example
             GL.UniformMatrix4(shaderObject.GetUniformLocation("camera"), true, ref cam);
             GL.Uniform3(shaderObject.GetUniformLocation("cameraPosition"), this.camera.CalcPosition().ToOpenTK());
             GL.UniformMatrix4(shaderObject.GetUniformLocation("camera"), true, ref camera);
-            
-            /**
+
             // draw objects
             if (this.rainState)
             {
                 this.cloud.SetAttribute(shaderObject.GetAttributeLocation("instancePosition"), new Vector3[] { this.rainPosition }, VertexAttribPointerType.Float, 3, true);
                 this.cloud.Draw();
             }
+            /**
             this.table.SetAttribute(shaderObject.GetAttributeLocation("instancePosition"), new Vector3[] { this.tablePosition }, VertexAttribPointerType.Float, 3, true);
             this.table.Draw();
             this.lightSphere.SetAttribute(shaderObject.GetAttributeLocation("instancePosition"), new Vector3[] { this.lightPosition }, VertexAttribPointerType.Float, 3, true);
