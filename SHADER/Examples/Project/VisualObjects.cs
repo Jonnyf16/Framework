@@ -36,7 +36,8 @@ namespace Example
 			if (ReferenceEquals(shader, null)) return;
 
             // cloud
-            Mesh cloudMesh = Obj2Mesh.FromObj(Resourcen.cloud).Transform(System.Numerics.Matrix4x4.CreateTranslation(rainPosition[0], rainPosition[1], rainPosition[2]));
+            // cloud needs to be translated higher to "get" the (beginning) light from below
+            Mesh cloudMesh = Obj2Mesh.FromObj(Resourcen.cloud).Transform(System.Numerics.Matrix4x4.CreateTranslation(0, 1, 0));
             this.cloud = VAOLoader.FromMesh(cloudMesh, shader);
             /**
             // table
@@ -75,7 +76,7 @@ namespace Example
             if (ReferenceEquals(shaderObject, null)) return;
             // update parameters
             this.rainState = rainState;
-            this.rainPosition = rainPosition;
+            this.rainPosition = new Vector3(rainPosition[0], rainPosition[1]-0.25f, rainPosition[2]);   // Correct height, because of transformation at creation
             this.lightPosition = lightPosition;
             this.cloud.SetAttribute(shaderObject.GetAttributeLocation("instancePosition"), new Vector3[] { this.rainPosition }, VertexAttribPointerType.Float, 3, true);
             //this.table.SetAttribute(shaderObject.GetAttributeLocation("instancePosition"), new Vector3[] { this.tablePosition }, VertexAttribPointerType.Float, 3, true);
