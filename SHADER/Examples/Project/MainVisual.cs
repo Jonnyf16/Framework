@@ -8,7 +8,7 @@ using System;
 namespace Example
 {
 	public class MainVisual
-	{
+    {
 		public CameraOrbit OrbitCamera { get { return camera; } }
 
 		public MainVisual()
@@ -38,7 +38,7 @@ namespace Example
             this.visualSmoke = new VisualSmoke(Vector3.Zero, this.windDirection);
 
             // camera setup
-            this.camera.FarClip = 40;
+            this.camera.FarClip = 80;
             this.camera.Distance = 3;
             this.camera.FovY = 70;
             this.camera.Elevation = 15;
@@ -70,6 +70,7 @@ namespace Example
             this.visualObjects.Render(cam);
             this.visualSmoke.Render(cam);
             this.visualRain.Render(cam);
+            
             glTimerRender.Deactivate();
 
 			Console.Write("Update:");
@@ -99,7 +100,7 @@ namespace Example
         {
             // Get current state
             keyboardState = OpenTK.Input.Keyboard.GetState();
-            float movingSpeed = 0.01f;
+            float movingSpeed = 0.02f;
 
             // wind reset
             if (keyboardState[Key.O])

@@ -15,18 +15,18 @@ namespace Example
 		{
             this.rainState = false;
             this.rainPosition = rainPosition;
-            this.tablePosition = new Vector3(.0f, -1.93f, .0f);
+            this.tablePosition = new Vector3(.0f, -4.75f, .0f);
             this.lightPosition = lightPosition;
 
-            camera.FarClip = 500;
-			camera.Distance = 30;
-            camera.FovY = 30;
+            envMap = TextureLoader.FromBitmap(Resourcen.environment);
+            envMap.WrapMode(TextureWrapMode.MirroredRepeat);
+            envMap.FilterLinear();
 
             GL.Enable(EnableCap.DepthTest);
 			GL.Enable(EnableCap.CullFace);
 
             Color4 backgroundColor = new Color4(0.0f, 0.05f, 0.15f, 1.0f);
-            GL.ClearColor(backgroundColor); // set background color
+            //GL.ClearColor(backgroundColor); // set background color
         }
 
 		public void ShaderChanged(string name, Shader shader)
@@ -36,7 +36,7 @@ namespace Example
 			if (ReferenceEquals(shader, null)) return;
 
             // cloud
-            Mesh cloudMesh = Obj2Mesh.FromObj(Resourcen.cloud);
+            Mesh cloudMesh = Obj2Mesh.FromObj(Resourcen.cloud).Transform(System.Numerics.Matrix4x4.CreateTranslation(rainPosition[0], rainPosition[1], rainPosition[2]));
             this.cloud = VAOLoader.FromMesh(cloudMesh, shader);
             /**
             // table
@@ -57,10 +57,15 @@ namespace Example
             //mesh.Add(cloud.Transform(System.Numerics.Matrix4x4.CreateTranslation(rainPosition[0], rainPosition[1], rainPosition[2])));
             // table
             var table = Obj2Mesh.FromObj(Resourcen.table);
-            mesh.Add(table.Transform(System.Numerics.Matrix4x4.CreateTranslation(tablePosition[0], tablePosition[1] - 4f, tablePosition[2])));
+            mesh.Add(table.Transform(System.Numerics.Matrix4x4.CreateTranslation(tablePosition[0], tablePosition[1], tablePosition[2])));
             var candle = Obj2Mesh.FromObj(Resourcen.candle);
             mesh.Add(candle.Transform(System.Numerics.Matrix4x4.CreateTranslation(0, 0.5f, 0)));
             this.geometry = VAOLoader.FromMesh(mesh, shader);
+
+            // environment sphere
+            var sphere = Meshes.CreateSphere(3, 4);
+            var envSphere = sphere.SwitchTriangleMeshWinding();
+            this.environment = VAOLoader.FromMesh(envSphere, shader);
         }
 
 		public CameraOrbit Camera { get { return camera; } }
@@ -82,16 +87,17 @@ namespace Example
         public void Render(Matrix4 camera)
 		{
             if (ReferenceEquals(null, shaderObject)) return;
-            var time = (float)timeSource.Elapsed.TotalSeconds;
-			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
-			shaderObject.Activate();
+            
 
-            // pass shader parameters
-			GL.Uniform1(shaderObject.GetUniformLocation("time"), time);
-            GL.Uniform3(shaderObject.GetUniformLocation("light1Direction"), new Vector3(-1, -1, -1).Normalized());
-            GL.Uniform4(shaderObject.GetUniformLocation("light1Color"), new Color4(0f, 1f, 0f, 1f));
-            GL.Uniform3(shaderObject.GetUniformLocation("light2Position"), new Vector3(lightPosition[0], 1.5f, lightPosition[2]));
-            GL.Uniform4(shaderObject.GetUniformLocation("light2Color"), new Color4(1f, 0f, 0f, 1f));
+            GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
+			shaderObject.Activate();
+            Random random = new Random();
+
+        // pass shader parameters
+            GL.Uniform3(shaderObject.GetUniformLocation("light1Direction"), new Vector3(0, 10, 10).Normalized());
+            GL.Uniform4(shaderObject.GetUniformLocation("light1Color"), new Color4(0.1f, 0.1f, 0.1f, 1f));
+            GL.Uniform3(shaderObject.GetUniformLocation("light2Position"), new Vector3(lightPosition[0], 0.5f, lightPosition[2]));
+            GL.Uniform4(shaderObject.GetUniformLocation("light2Color"), new Color4((float)Math.Sin(random.NextDouble()), 0f, 0f, 1f));
             GL.Uniform3(shaderObject.GetUniformLocation("light3Position"), lightPosition.Normalized());
             GL.Uniform3(shaderObject.GetUniformLocation("light3Direction"), new Vector3(lightPosition[0]*(-1), -1.1f, lightPosition[2]*(-1)).Normalized());
             GL.Uniform1(shaderObject.GetUniformLocation("light3Angle"), DMS.Geometry.MathHelper.DegreesToRadians(10f));
@@ -102,6 +108,18 @@ namespace Example
             GL.UniformMatrix4(shaderObject.GetUniformLocation("camera"), true, ref cam);
             GL.Uniform3(shaderObject.GetUniformLocation("cameraPosition"), this.camera.CalcPosition().ToOpenTK());
             GL.UniformMatrix4(shaderObject.GetUniformLocation("camera"), true, ref camera);
+
+            // environment
+            // different ids to differentiate spheres in fragment shader
+            var id = 1;
+            envMap.Activate();
+            GL.Uniform1(shaderObject.GetUniformLocation("id"), id);
+            this.environment.Draw();
+            envMap.Deactivate();
+
+            // objects
+            id = 2;
+            GL.Uniform1(shaderObject.GetUniformLocation("id"), id);
 
             // draw objects
             if (this.rainState)
@@ -125,10 +143,12 @@ namespace Example
         private bool rainState;
 		private Stopwatch timeSource = new Stopwatch();
         private VAO cloud;
-        private VAO table;
-        private VAO lightSphere;
+        //private VAO table;
+        //private VAO lightSphere;
         private VAO geometry;
+        private VAO environment;
         private CameraOrbit camera = new CameraOrbit();
+        private Texture envMap;
 
         private Vector3 rainPosition;
         private Vector3 tablePosition;

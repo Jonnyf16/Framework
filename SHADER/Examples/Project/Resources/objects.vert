@@ -1,5 +1,6 @@
 #version 430 core				
 
+uniform int id;
 uniform mat4 camera;
 uniform vec3 cameraPosition;
 uniform vec4 ambientLightColor;
@@ -13,13 +14,21 @@ in vec3 instancePosition;
 
 out vec3 pos;
 out vec3 n;
-out vec4 geroud_color;
 
 void main() 
 {
 	pos = position;
 	n = normal;
+	
+	// environment
+	if (1 == id)
+	{
+		gl_Position = camera * vec4(pos, 1.0);
+	}
 
-	vec3 pos = 0.3 * position + instancePosition;
-	gl_Position = camera * vec4(pos, 1.0);
+	if (2 == id)
+	{
+		vec3 pos = 0.3 * position + instancePosition;
+		gl_Position = camera * vec4(pos, 1.0);
+	}
 }

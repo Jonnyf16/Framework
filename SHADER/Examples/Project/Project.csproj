@@ -123,9 +123,7 @@
     <None Include="Resources\objects.frag" />
     <None Include="Resources\objects.vert" />
     <None Include="Resources\smoke.frag" />
-    <None Include="Resources\plane.frag" />
     <None Include="Resources\smoke.vert" />
-    <None Include="Resources\plane.vert" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resourcen.resx">
@@ -146,6 +144,7 @@
     <None Include="Resources\water_splash.png" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Resources\environment.jpg" />
     <Content Include="Resources\water_splash_original.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
