@@ -51,6 +51,7 @@ namespace Example
             this.visualSmoke.ShaderChanged(name, shader);
             this.visualRain.ShaderChanged(name, shader);
             this.visualObjects.ShaderChanged(name, shader);
+            this.visualFlame.ShaderChanged(name, shader);
         }
 
 		public void Update(float time)
@@ -61,7 +62,8 @@ namespace Example
             this.visualSmoke.Update(time, this.smokeState, this.candlePosition, this.windDirection);
             this.visualRain.Update(time, this.rainState, this.rainPosition, this.windDirection);
             this.visualObjects.Update(this.rainState, this.rainPosition + this.cloudTranslation);
-			glTimerUpdate.Deactivate();
+            //this.visualFlame.Update();
+            glTimerUpdate.Deactivate();
 		}
 
 		public void Render()

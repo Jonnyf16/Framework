@@ -23,13 +23,13 @@ namespace Example
 		{
 			if (ShaderName != name) return;
 			this.shaderFlame = shader;
-			if (ReferenceEquals(shader, null)) return;
-			Update(shader);
-		}
+            if (ReferenceEquals(shader, null)) return;
+            Update();
+        }
 
-		private void Update(Shader shader)
+		public void Update()
 		{
-			flame = new VAO();
+			this.flame = new VAO();
 			//generate position arrray on CPU
 			var rnd = new Random(12);
 			Func<float> Rnd01 = () => (float)rnd.NextDouble();
@@ -40,7 +40,7 @@ namespace Example
 				positions[i] = new Vector2(0, 0);
 			}
 			//copy positions to GPU
-			flame.SetAttribute(shader.GetAttributeLocation("in_position"), positions, VertexAttribPointerType.Float, 2);
+			this.flame.SetAttribute(this.shaderFlame.GetAttributeLocation("in_position"), positions, VertexAttribPointerType.Float, 2);
 
             //generate velocity arrray on CPU
             Func<float> RndSpeed = () => (Rnd01() - 0.5f) * 0.1f;
@@ -50,25 +50,25 @@ namespace Example
 				velocities[i] = new Vector2(RndSpeed(), RndSpeed());
 			}
 			//copy velocities to GPU
-			flame.SetAttribute(shader.GetAttributeLocation("in_velocity"), velocities, VertexAttribPointerType.Float, 2);
+			this.flame.SetAttribute(this.shaderFlame.GetAttributeLocation("in_velocity"), velocities, VertexAttribPointerType.Float, 2);
 		}
 
         public void Render()
         {
-            if (ReferenceEquals(shaderFlame, null)) return;
+            if (ReferenceEquals(this.shaderFlame, null)) return;
             GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.One);
             GL.Enable(EnableCap.Blend);
             GL.Enable(EnableCap.PointSprite);
             GL.Enable(EnableCap.ProgramPointSize);
     
             GL.Clear(ClearBufferMask.ColorBufferBit);
-            shaderFlame.Activate();
-            GL.Uniform1(shaderFlame.GetUniformLocation("iGlobalTime"), (float)timeSource.Elapsed.TotalSeconds);
-            GL.Uniform2(shaderFlame.GetUniformLocation("iResolution"), new Vector2(512, 512));
-            flame.Activate();
+            this.shaderFlame.Activate();
+            GL.Uniform1(this.shaderFlame.GetUniformLocation("iGlobalTime"), (float)timeSource.Elapsed.TotalSeconds);
+            GL.Uniform2(this.shaderFlame.GetUniformLocation("iResolution"), new Vector2(512, 512));
+            this.flame.Activate();
             GL.DrawArrays(PrimitiveType.Points, 0, pointCount);
-            flame.Deactivate();
-            shaderFlame.Deactivate();
+            this.flame.Deactivate();
+            this.shaderFlame.Deactivate();
 
             GL.Disable(EnableCap.VertexProgramPointSize);
             GL.Disable(EnableCap.PointSprite);
