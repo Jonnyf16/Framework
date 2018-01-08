@@ -15,7 +15,9 @@ namespace Example
             this.rainState = false;
             this.rainPosition = rainPosition;
             this.tablePosition = new Vector3(.0f, -1.42f, .0f);
-            this.candlePosition = new Vector3(.0f, -0.02f, .0f);
+            this.candlePosition = new Vector3(.0f, -.02f, .0f);
+            this.platePosition1 = new Vector3(.6f, -.01f, .0f);
+            this.platePosition2 = new Vector3(-.6f, -.01f, .0f);
             this.lightPosition = lightPosition;
             this.timeSpan = stopWatch.Elapsed;
 
@@ -57,6 +59,9 @@ namespace Example
             // candle
             Mesh candleMesh = Obj2Mesh.FromObj(Resourcen.candle);
             this.candle = VAOLoader.FromMesh(candleMesh, shader);
+            // plate
+            Mesh plateMesh = Obj2Mesh.FromObj(Resourcen.plate);
+            this.plate = VAOLoader.FromMesh(plateMesh, shader);
             // light sphere
             Mesh lightSphereMesh = Meshes.CreateSphere(0.1f, 4);
             this.lightSphere = VAOLoader.FromMesh(lightSphereMesh, shader);
@@ -78,6 +83,8 @@ namespace Example
             this.cloud.SetAttribute(shaderObject.GetAttributeLocation("instancePosition"), new Vector3[] { this.rainPosition }, VertexAttribPointerType.Float, 3, true);
             this.table.SetAttribute(shaderObject.GetAttributeLocation("instancePosition"), new Vector3[] { this.tablePosition }, VertexAttribPointerType.Float, 3, true);
             this.candle.SetAttribute(shaderObject.GetAttributeLocation("instancePosition"), new Vector3[] { this.candlePosition }, VertexAttribPointerType.Float, 3, true);
+            this.plate.SetAttribute(shaderObject.GetAttributeLocation("instancePosition"), new Vector3[] { this.platePosition1 }, VertexAttribPointerType.Float, 3, true);
+            this.plate.SetAttribute(shaderObject.GetAttributeLocation("instancePosition"), new Vector3[] { this.platePosition2 }, VertexAttribPointerType.Float, 3, true);
             this.lightSphere.SetAttribute(shaderObject.GetAttributeLocation("instancePosition"), new Vector3[] { this.lightPosition }, VertexAttribPointerType.Float, 3, true);
         }
 
@@ -132,6 +139,13 @@ namespace Example
                 this.cloud.SetAttribute(shaderObject.GetAttributeLocation("materialColor"), new Color4[] { new Color4(0.1f, 0.1f, 0.6f, 1f) }, VertexAttribPointerType.Float, 4, true);
                 this.cloud.Draw();
             }
+            // plate 1
+            this.plate.SetAttribute(shaderObject.GetAttributeLocation("instancePosition"), new Vector3[] { this.platePosition1 }, VertexAttribPointerType.Float, 3, true);
+            this.plate.SetAttribute(shaderObject.GetAttributeLocation("materialColor"), new Color4[] { new Color4(1f, 1f, 1f, 1f) }, VertexAttribPointerType.Float, 4, true);
+            this.plate.Draw();
+            // plate 2
+            this.plate.SetAttribute(shaderObject.GetAttributeLocation("instancePosition"), new Vector3[] { this.platePosition2 }, VertexAttribPointerType.Float, 3, true);
+            this.plate.Draw();
             // light sphere
             this.lightSphere.SetAttribute(shaderObject.GetAttributeLocation("instancePosition"), new Vector3[] { this.lightPosition }, VertexAttribPointerType.Float, 3, true);
             this.lightSphere.SetAttribute(shaderObject.GetAttributeLocation("materialColor"), new Color4[] { new Color4(1f, 1f, 1f, 1f) }, VertexAttribPointerType.Float, 4, true);
@@ -161,6 +175,7 @@ namespace Example
         private VAO cloud;
         private VAO table;
         private VAO candle;
+        private VAO plate;
         private VAO lightSphere;
         private VAO environment;
         private CameraOrbit camera = new CameraOrbit();
@@ -174,5 +189,7 @@ namespace Example
         private Vector3 tablePosition;
         private Vector3 lightPosition;
         private Vector3 candlePosition;
+        private Vector3 platePosition1;
+        private Vector3 platePosition2;
     }
 }

@@ -126,6 +126,7 @@
     <None Include="Resources\cloud.obj" />
     <None Include="Resources\objects.frag" />
     <None Include="Resources\objects.vert" />
+    <None Include="Resources\plate.obj" />
     <None Include="Resources\smoke.frag" />
     <None Include="Resources\smoke.vert" />
   </ItemGroup>
