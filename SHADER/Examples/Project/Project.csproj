@@ -62,6 +62,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resourcen.resx</DependentUpon>
     </Compile>
+    <Compile Include="VisualFlame.cs" />
     <Compile Include="VisualObjects.cs" />
     <Compile Include="VisualSmoke.cs" />
     <Compile Include="VisualRain.cs" />
@@ -120,12 +121,12 @@
     <None Include="readme.md" />
     <None Include="Resources\candle.obj" />
     <None Include="Resources\cloud.obj" />
+    <None Include="Resources\flame.frag" />
+    <None Include="Resources\flame.vert" />
     <None Include="Resources\objects.frag" />
     <None Include="Resources\objects.vert" />
     <None Include="Resources\smoke.frag" />
-    <None Include="Resources\plane.frag" />
     <None Include="Resources\smoke.vert" />
-    <None Include="Resources\plane.vert" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resourcen.resx">

@@ -34,6 +34,9 @@ namespace Example
             this.smokeState = false;
             this.visualSmoke = new VisualSmoke(Vector3.Zero, this.windDirection);
 
+            // flame setup
+            this.visualFlame = new VisualFlame();
+
             // camera setup
             this.camera.FarClip = 40;
             this.camera.Distance = 3;
@@ -145,6 +148,7 @@ namespace Example
 		private readonly VisualSmoke visualSmoke;
 		private readonly VisualRain visualRain;
         private readonly VisualObjects visualObjects;
+        private readonly VisualFlame visualFlame = new VisualFlame();
 		private QueryObject glTimerRender = new QueryObject();
 		private QueryObject glTimerUpdate = new QueryObject();
 
