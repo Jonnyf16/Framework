@@ -4,7 +4,6 @@ using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 using System;
-using System.Drawing;
 using System.Diagnostics;
 
 namespace Example
@@ -17,6 +16,7 @@ namespace Example
             this.rainPosition = rainPosition;
             this.tablePosition = new Vector3(.0f, -1.42f, .0f);
             this.lightPosition = lightPosition;
+            this.timeSpan = stopWatch.Elapsed;
 
             // environment texture
             envMap_tex = TextureLoader.FromBitmap(Resourcen.environment);
@@ -30,6 +30,9 @@ namespace Example
 
             GL.Enable(EnableCap.DepthTest);
 			GL.Enable(EnableCap.CullFace);
+
+            // time stopping for candle light flickering
+            this.stopWatch.Start();
         }
 
 		public void ShaderChanged(string name, Shader shader)
@@ -78,19 +81,25 @@ namespace Example
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 			shaderObject.Activate();
             Random random = new Random();
-            float candleFlickering = (float)Math.Sin(random.NextDouble());
+
+            // calculate value for candle light flickering
+            timeSpan = stopWatch.Elapsed;
+            double elapsedTime = timeSpan.TotalMilliseconds;
+            float candleFlickering = 0.8f + (float)Math.Sin((elapsedTime / 1000) + random.NextDouble()) / 30;
+            //Console.WriteLine("Value " + candleFlickering);
 
             // pass shader parameters
-            // light
+            // set and pass light values
             GL.Uniform3(shaderObject.GetUniformLocation("moonLightDirection"), new Vector3(0, 10, 10).Normalized());
             GL.Uniform4(shaderObject.GetUniformLocation("moonLightColor"), new Color4(0.2f, 0.2f, 0.5f, 1f));
             GL.Uniform3(shaderObject.GetUniformLocation("candleLightPosition"), new Vector3(0, 0.5f, 0));
-            GL.Uniform4(shaderObject.GetUniformLocation("candleLightColor"), new Color4(candleFlickering, 0f, 0f, 1f));
+            GL.Uniform4(shaderObject.GetUniformLocation("candleLightColor"), new Color4(candleFlickering, 0.6f*candleFlickering, 0f, 1.0f));
             GL.Uniform3(shaderObject.GetUniformLocation("spotLightPosition"), lightPosition.Normalized());
             GL.Uniform3(shaderObject.GetUniformLocation("spotLightDirection"), new Vector3(lightPosition[0]*(-1), -1.1f, lightPosition[2]*(-1)).Normalized());
             GL.Uniform1(shaderObject.GetUniformLocation("spotLightAngle"), DMS.Geometry.MathHelper.DegreesToRadians(10f));
             GL.Uniform4(shaderObject.GetUniformLocation("spotLightColor"), new Color4(0, 0, 1f, 1f));
             GL.Uniform4(shaderObject.GetUniformLocation("ambientLightColor"), new Color4(0.1f, 0.1f, 0.2f, 1f));
+
             // camera
             var cam = this.camera.CalcMatrix().ToOpenTK();
             GL.UniformMatrix4(shaderObject.GetUniformLocation("camera"), true, ref cam);
@@ -114,7 +123,7 @@ namespace Example
             if (this.rainState)
             {
                 this.cloud.SetAttribute(shaderObject.GetAttributeLocation("instancePosition"), new Vector3[] { this.rainPosition }, VertexAttribPointerType.Float, 3, true);
-                this.cloud.SetAttribute(shaderObject.GetAttributeLocation("materialColor"), new Color4[] { new Color4(0f, 0f, 1f, 1f) }, VertexAttribPointerType.Float, 4, true);
+                this.cloud.SetAttribute(shaderObject.GetAttributeLocation("materialColor"), new Color4[] { new Color4(0.1f, 0.1f, 0.6f, 1f) }, VertexAttribPointerType.Float, 4, true);
                 this.cloud.Draw();
             }
             // candle
@@ -140,7 +149,7 @@ namespace Example
         public static readonly string ShaderName = nameof(shaderObject);
         private Shader shaderObject;
         private bool rainState;
-		private Stopwatch timeSource = new Stopwatch();
+		private Stopwatch stopWatch = new Stopwatch();
         private VAO cloud;
         private VAO table;
         private VAO candle;
@@ -149,6 +158,8 @@ namespace Example
         private CameraOrbit camera = new CameraOrbit();
         private Texture envMap_tex;
         private Texture tableCloth_tex;
+        private QueryObject glTimer = new QueryObject();
+        private TimeSpan timeSpan;
 
         private Vector3 rainPosition;
         private Vector3 tablePosition;
