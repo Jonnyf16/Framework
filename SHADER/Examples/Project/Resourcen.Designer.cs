@@ -173,6 +173,16 @@ namespace Example {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap tablecloth_tex {
+            get {
+                object obj = ResourceManager.GetObject("tablecloth_tex", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap water_splash {
             get {
                 object obj = ResourceManager.GetObject("water_splash", resourceCulture);

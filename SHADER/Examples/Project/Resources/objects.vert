@@ -4,21 +4,26 @@ uniform int id;
 uniform mat4 camera;
 uniform vec3 cameraPosition;
 uniform vec4 ambientLightColor;
-uniform vec4 materialColor;
 uniform vec4 light1Color;
 uniform vec3 light1Direction;
 
+in vec2 uv;
 in vec3 position;
 in vec3 normal;
 in vec3 instancePosition;
+in vec4 materialColor;
 
+out vec2 uvs;
 out vec3 pos;
 out vec3 n;
+out vec4 materialColor1;
 
 void main() 
 {
 	pos = position;
 	n = normal;
+	materialColor1 = materialColor;
+	uvs = uv;
 	
 	// environment
 	if (1 == id)
@@ -26,9 +31,10 @@ void main()
 		gl_Position = camera * vec4(pos, 1.0);
 	}
 
-	if (2 == id)
+	// objects
+	if (2 == id || 3 == id)
 	{
-		vec3 pos = 0.3 * position + instancePosition;
+		pos = 0.3 * position + instancePosition;
 		gl_Position = camera * vec4(pos, 1.0);
 	}
 }

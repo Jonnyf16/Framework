@@ -98,6 +98,10 @@
       <Project>{911c6dff-be3e-4ea5-adf2-a363df797f23}</Project>
       <Name>DMS.Application</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\..\_Common\DMS.HLGL\DMS.HLGL.csproj">
+      <Project>{227d6be1-ba08-4030-a755-07288540931f}</Project>
+      <Name>DMS.HLGL</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\..\_Common\DMS.OpenGL\DMS.OpenGL.csproj">
       <Project>{c660f6af-c100-4169-a9fb-61e1ebe87f34}</Project>
       <Name>DMS.OpenGL</Name>
@@ -145,6 +149,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\environment.jpg" />
+    <None Include="Resources\tablecloth_tex.jpg" />
     <Content Include="Resources\water_splash_original.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
