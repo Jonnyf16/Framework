@@ -15,6 +15,7 @@ namespace Example
             this.rainState = false;
             this.rainPosition = rainPosition;
             this.tablePosition = new Vector3(.0f, -1.42f, .0f);
+            this.candlePosition = new Vector3(.0f, -0.02f, .0f);
             this.lightPosition = lightPosition;
             this.timeSpan = stopWatch.Elapsed;
 
@@ -27,6 +28,11 @@ namespace Example
             tableCloth_tex = TextureLoader.FromBitmap(Resourcen.tablecloth_tex);
             tableCloth_tex.WrapMode(TextureWrapMode.MirroredRepeat);
             tableCloth_tex.FilterLinear();
+
+            // candle texture
+            candle_tex = TextureLoader.FromBitmap(Resourcen.candle_tex);
+            candle_tex.WrapMode(TextureWrapMode.MirroredRepeat);
+            candle_tex.FilterLinear();
 
             GL.Enable(EnableCap.DepthTest);
 			GL.Enable(EnableCap.CullFace);
@@ -52,7 +58,7 @@ namespace Example
             Mesh candleMesh = Obj2Mesh.FromObj(Resourcen.candle);
             this.candle = VAOLoader.FromMesh(candleMesh, shader);
             // light sphere
-            Mesh lightSphereMesh = Meshes.CreateSphere(0.25f, 4);
+            Mesh lightSphereMesh = Meshes.CreateSphere(0.1f, 4);
             this.lightSphere = VAOLoader.FromMesh(lightSphereMesh, shader);
             // environment sphere
             var sphere = Meshes.CreateSphere(3, 4);
@@ -71,7 +77,7 @@ namespace Example
             this.lightPosition = lightPosition;
             this.cloud.SetAttribute(shaderObject.GetAttributeLocation("instancePosition"), new Vector3[] { this.rainPosition }, VertexAttribPointerType.Float, 3, true);
             this.table.SetAttribute(shaderObject.GetAttributeLocation("instancePosition"), new Vector3[] { this.tablePosition }, VertexAttribPointerType.Float, 3, true);
-            this.candle.SetAttribute(shaderObject.GetAttributeLocation("instancePosition"), new Vector3[] { this.lightPosition }, VertexAttribPointerType.Float, 3, true);
+            this.candle.SetAttribute(shaderObject.GetAttributeLocation("instancePosition"), new Vector3[] { this.candlePosition }, VertexAttribPointerType.Float, 3, true);
             this.lightSphere.SetAttribute(shaderObject.GetAttributeLocation("instancePosition"), new Vector3[] { this.lightPosition }, VertexAttribPointerType.Float, 3, true);
         }
 
@@ -85,7 +91,7 @@ namespace Example
             // calculate value for candle light flickering
             timeSpan = stopWatch.Elapsed;
             double elapsedTime = timeSpan.TotalMilliseconds;
-            float candleFlickering = 0.8f + (float)Math.Sin((elapsedTime / 1000) + random.NextDouble()) / 30;
+            float candleFlickering = 0.9f + (float)Math.Sin((elapsedTime / 1000) + random.NextDouble()) / 30;
             //Console.WriteLine("Value " + candleFlickering);
 
             // pass shader parameters
@@ -126,10 +132,6 @@ namespace Example
                 this.cloud.SetAttribute(shaderObject.GetAttributeLocation("materialColor"), new Color4[] { new Color4(0.1f, 0.1f, 0.6f, 1f) }, VertexAttribPointerType.Float, 4, true);
                 this.cloud.Draw();
             }
-            // candle
-            this.candle.SetAttribute(shaderObject.GetAttributeLocation("instancePosition"), new Vector3[] { this.lightPosition }, VertexAttribPointerType.Float, 3, true);
-            this.candle.SetAttribute(shaderObject.GetAttributeLocation("materialColor"), new Color4[] { new Color4(1f, 1f, 1f, 1f) }, VertexAttribPointerType.Float, 4, true);
-            this.candle.Draw();
             // light sphere
             this.lightSphere.SetAttribute(shaderObject.GetAttributeLocation("instancePosition"), new Vector3[] { this.lightPosition }, VertexAttribPointerType.Float, 3, true);
             this.lightSphere.SetAttribute(shaderObject.GetAttributeLocation("materialColor"), new Color4[] { new Color4(1f, 1f, 1f, 1f) }, VertexAttribPointerType.Float, 4, true);
@@ -142,6 +144,12 @@ namespace Example
             this.table.SetAttribute(shaderObject.GetAttributeLocation("materialColor"), new Color4[] { new Color4(1f, 1f, 1f, 1f) }, VertexAttribPointerType.Float, 4, true);
             this.table.Draw();
             tableCloth_tex.Deactivate();
+            // candle
+            candle_tex.Activate();
+            this.candle.SetAttribute(shaderObject.GetAttributeLocation("instancePosition"), new Vector3[] { this.candlePosition }, VertexAttribPointerType.Float, 3, true);
+            this.candle.SetAttribute(shaderObject.GetAttributeLocation("materialColor"), new Color4[] { new Color4(1f, 1f, 1f, 1f) }, VertexAttribPointerType.Float, 4, true);
+            this.candle.Draw();
+            candle_tex.Deactivate();
 
             shaderObject.Deactivate();
 		}
@@ -158,11 +166,13 @@ namespace Example
         private CameraOrbit camera = new CameraOrbit();
         private Texture envMap_tex;
         private Texture tableCloth_tex;
+        private Texture candle_tex;
         private QueryObject glTimer = new QueryObject();
         private TimeSpan timeSpan;
 
         private Vector3 rainPosition;
         private Vector3 tablePosition;
         private Vector3 lightPosition;
+        private Vector3 candlePosition;
     }
 }

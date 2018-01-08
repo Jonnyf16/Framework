@@ -148,6 +148,7 @@
     <None Include="Resources\water_splash.png" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Resources\candle_tex.jpg" />
     <Content Include="Resources\environment.jpg" />
     <None Include="Resources\tablecloth_tex.jpg" />
     <Content Include="Resources\water_splash_original.png" />

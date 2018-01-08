@@ -14,7 +14,7 @@ namespace Example
 		public MainVisual()
 		{
             // light setup
-            this.lightPosition = new Vector3(0, 1, 0);
+            this.lightPosition = new Vector3(0, 0.5f, 0);
 
             // wind setup
             this.windDirection = new Vector3(0.0f);
@@ -35,6 +35,7 @@ namespace Example
 
             // smoke setup
             this.smokeState = false;
+            this.smokePosition = new Vector3(.0f, .5f, .0f);
             this.visualSmoke = new VisualSmoke(Vector3.Zero, this.windDirection);
 
             // camera setup
@@ -56,7 +57,7 @@ namespace Example
             KeyboardEvent();
             checkRainCandleCollision();
             glTimerUpdate.Activate(QueryTarget.TimeElapsed);
-            this.visualSmoke.Update(time, this.smokeState, this.candlePosition, this.windDirection);
+            this.visualSmoke.Update(time, this.smokeState, this.smokePosition, this.windDirection);
             this.visualRain.Update(time, this.rainState, this.rainPosition, this.windDirection);
             this.visualObjects.Update(this.rainState, this.rainPosition + this.cloudTranslation, this.lightPosition);
 			glTimerUpdate.Deactivate();
@@ -173,6 +174,7 @@ namespace Example
         private Vector3 candlePosition;
         private float candleThickness;
         private bool smokeState;
+        private Vector3 smokePosition;
         private Vector3 windDirection;
         private Vector3 lightPosition;
 
