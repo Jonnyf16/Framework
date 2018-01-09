@@ -62,7 +62,7 @@ namespace Example
             this.visualSmoke.Update(time, this.smokeState, this.candlePosition, this.windDirection);
             this.visualRain.Update(time, this.rainState, this.rainPosition, this.windDirection);
             this.visualObjects.Update(this.rainState, this.rainPosition + this.cloudTranslation);
-            //this.visualFlame.Update();
+            this.visualFlame.Update();
             glTimerUpdate.Deactivate();
 		}
 
@@ -75,6 +75,7 @@ namespace Example
 
             this.visualSmoke.Render(cam);
             this.visualRain.Render(cam);
+            this.visualFlame.Render();
             glTimerRender.Deactivate();
 
 			Console.Write("Update:");
@@ -150,7 +151,7 @@ namespace Example
 		private readonly VisualSmoke visualSmoke;
 		private readonly VisualRain visualRain;
         private readonly VisualObjects visualObjects;
-        private readonly VisualFlame visualFlame = new VisualFlame();
+        private readonly VisualFlame visualFlame;
 		private QueryObject glTimerRender = new QueryObject();
 		private QueryObject glTimerUpdate = new QueryObject();
 

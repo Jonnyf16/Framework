@@ -9,10 +9,10 @@ namespace Example
 	public class VisualFlame
 	{
         public static readonly string ShaderName = nameof(shaderFlame);
-        private const int pointCount = 3;
+        private const int pointCount = 1;
         private Shader shaderFlame;
         private Stopwatch timeSource = new Stopwatch();
-        private VAO flame;
+        private VAO flame = new VAO();
 
         public VisualFlame()
 		{
@@ -29,29 +29,8 @@ namespace Example
 
 		public void Update()
 		{
-			this.flame = new VAO();
-			//generate position arrray on CPU
-			var rnd = new Random(12);
-			Func<float> Rnd01 = () => (float)rnd.NextDouble();
-			Func<float> RndCoord = () => (Rnd01() - 0.5f) * 2.0f;
-			var positions = new Vector2[pointCount];
-			for (int i = 0; i < pointCount; ++i)
-			{
-				positions[i] = new Vector2(0, 0);
-			}
-			//copy positions to GPU
-			this.flame.SetAttribute(this.shaderFlame.GetAttributeLocation("in_position"), positions, VertexAttribPointerType.Float, 2);
-
-            //generate velocity arrray on CPU
-            Func<float> RndSpeed = () => (Rnd01() - 0.5f) * 0.1f;
-			var velocities = new Vector2[pointCount];
-			for (int i = 0; i < pointCount; ++i)
-			{
-				velocities[i] = new Vector2(RndSpeed(), RndSpeed());
-			}
-			//copy velocities to GPU
-			this.flame.SetAttribute(this.shaderFlame.GetAttributeLocation("in_velocity"), velocities, VertexAttribPointerType.Float, 2);
-		}
+            //this.flame.SetAttribute(this.shaderFlame.GetAttributeLocation("position"), position, VertexAttribPointerType.Float, 2);
+        }
 
         public void Render()
         {
@@ -63,6 +42,7 @@ namespace Example
     
             GL.Clear(ClearBufferMask.ColorBufferBit);
             this.shaderFlame.Activate();
+            
             GL.Uniform1(this.shaderFlame.GetUniformLocation("iGlobalTime"), (float)timeSource.Elapsed.TotalSeconds);
             GL.Uniform2(this.shaderFlame.GetUniformLocation("iResolution"), new Vector2(512, 512));
             this.flame.Activate();
