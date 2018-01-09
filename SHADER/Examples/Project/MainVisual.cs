@@ -11,7 +11,7 @@ namespace Example
     {
 		public CameraOrbit OrbitCamera { get { return camera; } }
 
-		public MainVisual()
+		public MainVisual(int windowHeight, int windowWidth)
 		{
             // light setup
             this.lightPosition = new Vector3(0, 0.5f, 0);
@@ -39,7 +39,7 @@ namespace Example
             this.visualSmoke = new VisualSmoke(Vector3.Zero, this.windDirection);
 
             // flame setup
-            this.visualFlame = new VisualFlame();
+            this.visualFlame = new VisualFlame(windowHeight, windowWidth);
 
             // camera setup
             this.camera.FarClip = 80;
@@ -77,7 +77,7 @@ namespace Example
             this.visualObjects.Render(cam);
             this.visualSmoke.Render(cam);
             this.visualRain.Render(cam);
-            //this.visualFlame.Render();
+            this.visualFlame.Render(cam);
 
             glTimerRender.Deactivate();
 

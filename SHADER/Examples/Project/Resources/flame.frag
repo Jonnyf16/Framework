@@ -1,6 +1,5 @@
 #version 430 core
 
-uniform vec2 iResolution;
 uniform float iGlobalTime;
 out vec4 fragColor;
 
@@ -49,8 +48,7 @@ float fbm(vec2 uv)
 
 void main()
 {
-	vec2 uv = gl_FragCoord.xy / iResolution.xy;
-	vec2 flameCoord = uv;
+	vec2 flameCoord = gl_PointCoord;
     
     // set flame coordinates
     flameCoord.x -= 0.5;
@@ -89,4 +87,6 @@ void main()
     // color
 	vec3 col = vec3(1.5 * flame, 1.5 * pow(flame, 3.0), pow(flame, 6.0));
 	fragColor = vec4(vec3(col), 1.0);
+	
+		
 }

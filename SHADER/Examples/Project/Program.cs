@@ -11,10 +11,13 @@ namespace Example
 		[STAThread]
 		private static void Main()
 		{
-			var app = new ExampleApplication();
+            var windowHeight = 512;
+            var windowWidth = 512;
+			var app = new ExampleApplication(windowHeight, windowWidth);
+            var i = app.GameWindow.Height;
 			LoadResources(app.ResourceManager);
 			var controller = new Controller();
-			MainVisual visual = new MainVisual();
+			MainVisual visual = new MainVisual(windowHeight, windowWidth);
 			app.ResourceManager.ShaderChanged += visual.ShaderChanged;
 			var timeSource = new Stopwatch();
 			app.GameWindow.ConnectEvents(visual.OrbitCamera);
@@ -28,6 +31,7 @@ namespace Example
 		{
 			resourceManager.Add(nameof(Resourcen.smoke), new ResourceTextureBitmap(Resourcen.smoke));
 			var dir = Path.GetDirectoryName(PathTools.GetSourceFilePath()) + "/Resources/";
+            // TODO: change name of "smoke" shader to "particle"
 			resourceManager.AddShader(VisualSmoke.ShaderName, dir + "smoke.vert", dir + "smoke.frag"
 				, Resourcen.smoke_vert, Resourcen.smoke_frag);
 			resourceManager.AddShader(VisualRain.ShaderName, dir + "rain.vert", dir + "rain.frag"

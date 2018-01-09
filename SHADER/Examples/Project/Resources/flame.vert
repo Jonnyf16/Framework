@@ -1,12 +1,15 @@
 #version 430 core				
 
-uniform float iGlobalTime;
-in vec2 position;
+uniform vec2 iResolution;
+uniform mat4 camera;
+in vec4 instance_position;
+in vec3 position;
+
+out vec2 uvs;
 
 void main() 
 {
-	// ToDo: get PointSize right
-	gl_PointSize = 512.0;
-	vec2 newPos = position;
-	gl_Position = vec4(newPos, 0.0, 1.0);
+	vec4 pos = camera * vec4(position, 1.0) + instance_position;
+	gl_PointSize = (1 - pos.z / pos.w) * 1000;
+	gl_Position = pos;
 }
