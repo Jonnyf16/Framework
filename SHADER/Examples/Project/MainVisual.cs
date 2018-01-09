@@ -38,6 +38,9 @@ namespace Example
             this.smokePosition = new Vector3(.0f, .5f, .0f);
             this.visualSmoke = new VisualSmoke(Vector3.Zero, this.windDirection);
 
+            // flame setup
+            this.visualFlame = new VisualFlame();
+
             // camera setup
             this.camera.FarClip = 80;
             this.camera.Distance = 3;
@@ -50,6 +53,7 @@ namespace Example
             this.visualSmoke.ShaderChanged(name, shader);
             this.visualRain.ShaderChanged(name, shader);
             this.visualObjects.ShaderChanged(name, shader);
+            this.visualFlame.ShaderChanged(name, shader);
         }
 
 		public void Update(float time)
@@ -61,6 +65,8 @@ namespace Example
             this.visualRain.Update(time, this.rainState, this.rainPosition, this.windDirection);
             this.visualObjects.Update(this.rainState, this.rainPosition + this.cloudTranslation, this.lightPosition);
 			glTimerUpdate.Deactivate();
+            this.visualFlame.Update();
+            glTimerUpdate.Deactivate();
 		}
 
 		public void Render()
@@ -71,7 +77,8 @@ namespace Example
             this.visualObjects.Render(cam);
             this.visualSmoke.Render(cam);
             this.visualRain.Render(cam);
-            
+            //this.visualFlame.Render();
+
             glTimerRender.Deactivate();
 
 			Console.Write("Update:");
@@ -161,6 +168,7 @@ namespace Example
 		private readonly VisualSmoke visualSmoke;
 		private readonly VisualRain visualRain;
         private readonly VisualObjects visualObjects;
+        private readonly VisualFlame visualFlame;
 		private QueryObject glTimerRender = new QueryObject();
 		private QueryObject glTimerUpdate = new QueryObject();
 

@@ -9,7 +9,7 @@ namespace Example
 	class MainVisual
 	{
         public static readonly string ShaderName = nameof(shader);
-        private const int pointCount = 1;
+        private const int pointCount = 3;
         private Shader shader;
         private Stopwatch timeSource = new Stopwatch();
         private VAO geometry;
@@ -41,13 +41,13 @@ namespace Example
 			var positions = new Vector2[pointCount];
 			for (int i = 0; i < pointCount; ++i)
 			{
-				positions[i] = new Vector2(RndCoord(), RndCoord());
+				positions[i] = new Vector2(0, 0);
 			}
 			//copy positions to GPU
 			geometry.SetAttribute(shader.GetAttributeLocation("in_position"), positions, VertexAttribPointerType.Float, 2);
 
-			//generate velocity arrray on CPU
-			Func<float> RndSpeed = () => (Rnd01() - 0.5f) * 0.1f;
+            //generate velocity arrray on CPU
+            Func<float> RndSpeed = () => (Rnd01() - 0.5f) * 0.1f;
 			var velocities = new Vector2[pointCount];
 			for (int i = 0; i < pointCount; ++i)
 			{
@@ -63,7 +63,8 @@ namespace Example
             GL.Clear(ClearBufferMask.ColorBufferBit);
             shader.Activate();
             ////ATTENTION: always give the time as a float if the uniform in the shader is a float
-            GL.Uniform1(shader.GetUniformLocation("time"), (float)timeSource.Elapsed.TotalSeconds);
+            GL.Uniform1(shader.GetUniformLocation("iGlobalTime"), (float)timeSource.Elapsed.TotalSeconds);
+            GL.Uniform2(shader.GetUniformLocation("iResolution"), new Vector2(512, 512));
             geometry.Activate();
             GL.DrawArrays(PrimitiveType.Points, 0, pointCount);
             geometry.Deactivate();

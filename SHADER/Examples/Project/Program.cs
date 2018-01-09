@@ -34,6 +34,8 @@ namespace Example
 				, Resourcen.smoke_vert, Resourcen.smoke_frag);
             resourceManager.AddShader(VisualObjects.ShaderName, dir + "objects.vert", dir + "objects.frag"
                 , Resourcen.objects_vert, Resourcen.objects_frag);
+            resourceManager.AddShader(VisualFlame.ShaderName, dir + "flame.vert", dir + "flame.frag"
+                , Resourcen.flame_vert, Resourcen.flame_frag);
         }
 	}
 }

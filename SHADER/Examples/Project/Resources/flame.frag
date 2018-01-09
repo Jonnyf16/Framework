@@ -1,3 +1,10 @@
+#version 430 core
+
+uniform vec2 iResolution;
+uniform float iGlobalTime;
+out vec4 fragColor;
+
+
 //////////////////////
 // Fire Flame shader
 
@@ -40,9 +47,9 @@ float fbm(vec2 uv)
 	return f;
 }
 
-void mainImage( out vec4 fragColor, in vec2 fragCoord )
+void main()
 {
-	vec2 uv = fragCoord.xy / iResolution.xy;
+	vec2 uv = gl_FragCoord.xy / iResolution.xy;
 	vec2 flameCoord = uv;
     
     // set flame coordinates
@@ -54,11 +61,11 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord )
     // flame parameters
 	float strength = 5.0;
     float speed = 3.0;
-    float disort_ver = 2.0*sin(iTime);
+    float disort_ver = 2.0*sin(iGlobalTime);
     float disort_hor = disort_ver;
     
     // creates background noise
-	float fbm_ = fbm(strength * flameCoord - vec2(0, iTime * speed));
+	float fbm_ = fbm(strength * flameCoord - vec2(0, iGlobalTime * speed));
     
     // hight
     float height = (1.0 - flameCoord.y * 0.55) * 2.0;
