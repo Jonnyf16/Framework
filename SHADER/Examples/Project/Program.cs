@@ -1,5 +1,5 @@
 ﻿using DMS.Application;
-using DMS.Base;using DMS.Application;
+using DMS.Base;
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -36,6 +36,8 @@ namespace Example
 				, Resourcen.rain_vert, Resourcen.rain_frag);
             resourceManager.AddShader(VisualObjects.ShaderName, dir + "objects.vert", dir + "objects.frag"
                 , Resourcen.objects_vert, Resourcen.objects_frag);
+            resourceManager.AddShader(VisualObjects.ShaderShadowName, dir + "shadow.vert", dir + "shadow.frag"
+                , Resourcen.shadow_vert, Resourcen.shadow_frag);
             resourceManager.AddShader(VisualFlame.ShaderName, dir + "flame.vert", dir + "flame.frag"
                 , Resourcen.flame_vert, Resourcen.flame_frag);
         }

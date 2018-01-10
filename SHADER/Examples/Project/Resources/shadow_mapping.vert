@@ -3,21 +3,20 @@
 uniform mat4 camera;
 uniform mat4 light;
 
-in vec4 position;
+in vec3 position;
+in vec3 instancePosition;
 in vec3 normal;
 in vec2 uv;
 
-out blockData
-{
-	vec4 position_LS;
-	vec3 normal;
-	vec2 uv;
-} o;
+out vec4 shadowLightPosition;
+out vec2 uvs;
+out vec3 n;
 
 void main() 
 {
-	o.position_LS = light * position;
-	o.normal = normal;
-	o.uv = uv;
+	shadowLightPosition = light * position;
+	n = normal;
+	uvs = uv;
+	vec3 pos = 0.3 * position + instancePosition;
 	gl_Position = camera * position;
 }

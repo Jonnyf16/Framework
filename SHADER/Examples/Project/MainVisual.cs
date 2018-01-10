@@ -77,7 +77,7 @@ namespace Example
             this.visualObjects.Render(cam);
             this.visualSmoke.Render(cam);
             this.visualRain.Render(cam);
-            this.visualFlame.Render(cam);
+            //this.visualFlame.Render(cam);
 
             glTimerRender.Deactivate();
 
