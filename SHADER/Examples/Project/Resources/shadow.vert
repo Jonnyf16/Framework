@@ -2,13 +2,13 @@
 			
 uniform mat4 camera;
 
-in vec3 position;
+in vec4 position;
 in vec3 instancePosition;
 
 out vec4 pos;
 
 void main() 
 {
-	vec4 pos = vec4(vec3(0.3 * position + instancePosition), 1.0);
-	gl_Position = camera * pos;
+	pos = camera * vec4(vec3(0.3 * position.xyz + instancePosition), position.w);
+	gl_Position = pos;
 }
