@@ -183,6 +183,26 @@ namespace Example {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
+        internal static byte[] shadow_frag {
+            get {
+                object obj = ResourceManager.GetObject("shadow_frag", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] shadow_vert {
+            get {
+                object obj = ResourceManager.GetObject("shadow_vert", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
         internal static byte[] smoke_frag {
             get {
                 object obj = ResourceManager.GetObject("smoke_frag", resourceCulture);

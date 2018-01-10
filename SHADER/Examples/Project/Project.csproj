@@ -125,6 +125,8 @@
     <None Include="readme.md" />
     <None Include="Resources\candle.obj" />
     <None Include="Resources\cloud.obj" />
+    <None Include="Resources\shadow.frag" />
+    <None Include="Resources\shadow.vert" />
     <None Include="Resources\flame.frag" />
     <None Include="Resources\flame.vert" />
     <None Include="Resources\objects.frag" />

@@ -10,7 +10,36 @@ namespace Example
 {
 	public class VisualObjects
 	{
-		public VisualObjects(Vector3 rainPosition, Vector3 lightPosition)
+        private Shader shaderObject;
+        private Shader shaderShadow;
+        public static readonly string ShaderName = nameof(shaderObject);
+        public static readonly string ShaderShadowName = nameof(shaderShadow);
+        private bool rainState;
+        private Stopwatch stopWatch = new Stopwatch();
+        private VAO cloud;
+        private VAO table;
+        private VAO candle;
+        private VAO plate;
+        private VAO lightSphere;
+        private VAO environment;
+        private CameraOrbit camera = new CameraOrbit();
+        private Texture envMap_tex;
+        private Texture tableCloth_tex;
+        private Texture candle_tex;
+        private QueryObject glTimer = new QueryObject();
+        private TimeSpan timeSpan;
+        private Random random = new Random();
+        private FBO fboShadowMap = new FBOwithDepth(Texture.Create(4112, 4112, PixelInternalFormat.R32f, PixelFormat.Red, PixelType.Float));
+        private CameraOrbit cameraLight = new CameraOrbit();
+
+        private Vector3 rainPosition;
+        private Vector3 tablePosition;
+        private Vector3 lightPosition;
+        private Vector3 candlePosition;
+        private Vector3 platePosition1;
+        private Vector3 platePosition2;
+
+        public VisualObjects(Vector3 rainPosition, Vector3 lightPosition)
 		{
             this.rainState = false;
             this.rainPosition = rainPosition;
@@ -41,34 +70,51 @@ namespace Example
 
             // time stopping for candle light flickering
             this.stopWatch.Start();
+
+            // Shadow mapping
+            fboShadowMap.Texture.FilterNearest();
+
+            // Camera Light
+            cameraLight.FarClip = 40;
+            cameraLight.Distance = 5f;
+            cameraLight.Elevation = 90;
+            cameraLight.Azimuth = 0;
+            Console.WriteLine("POSITION: {0}", cameraLight.CalcPosition());
         }
 
 		public void ShaderChanged(string name, Shader shader)
 		{
-			if (ShaderName != name) return;
-			this.shaderObject = shader;
-			if (ReferenceEquals(shader, null)) return;
+            if (ShaderName == name)
+            {
+                this.shaderObject = shader;
+                if (ReferenceEquals(shader, null)) return;
 
-            // cloud
-            // cloud needs to be translated higher to "get" the (beginning) light from below
-            Mesh cloudMesh = Obj2Mesh.FromObj(Resourcen.cloud);
-            this.cloud = VAOLoader.FromMesh(cloudMesh, shader);
-            // table
-            Mesh tableMesh = Obj2Mesh.FromObj(Resourcen.table);
-            this.table = VAOLoader.FromMesh(tableMesh, shader);
-            // candle
-            Mesh candleMesh = Obj2Mesh.FromObj(Resourcen.candle);
-            this.candle = VAOLoader.FromMesh(candleMesh, shader);
-            // plate
-            Mesh plateMesh = Obj2Mesh.FromObj(Resourcen.plate);
-            this.plate = VAOLoader.FromMesh(plateMesh, shader);
-            // light sphere
-            Mesh lightSphereMesh = Meshes.CreateSphere(0.1f, 4);
-            this.lightSphere = VAOLoader.FromMesh(lightSphereMesh, shader);
-            // environment sphere
-            var sphere = Meshes.CreateSphere(3, 4);
-            var envSphere = sphere.SwitchTriangleMeshWinding();
-            this.environment = VAOLoader.FromMesh(envSphere, shader);
+                // cloud
+                // cloud needs to be translated higher to "get" the (beginning) light from below
+                Mesh cloudMesh = Obj2Mesh.FromObj(Resourcen.cloud);
+                this.cloud = VAOLoader.FromMesh(cloudMesh, shader);
+                // table
+                Mesh tableMesh = Obj2Mesh.FromObj(Resourcen.table);
+                this.table = VAOLoader.FromMesh(tableMesh, shader);
+                // candle
+                Mesh candleMesh = Obj2Mesh.FromObj(Resourcen.candle);
+                this.candle = VAOLoader.FromMesh(candleMesh, shader);
+                // plate
+                Mesh plateMesh = Obj2Mesh.FromObj(Resourcen.plate);
+                this.plate = VAOLoader.FromMesh(plateMesh, shader);
+                // light sphere
+                Mesh lightSphereMesh = Meshes.CreateSphere(0.1f, 4);
+                this.lightSphere = VAOLoader.FromMesh(lightSphereMesh, shader);
+                // environment sphere
+                //var sphere = Meshes.CreateSphere(3, 4);
+                //var envSphere = sphere.SwitchTriangleMeshWinding();
+                //this.environment = VAOLoader.FromMesh(envSphere, shader);
+            }
+            else if (ShaderShadowName == name)
+            {
+                this.shaderShadow = shader;
+                if (ReferenceEquals(shaderObject, null)) return;
+            }
         }
 
 		public CameraOrbit Camera { get { return camera; } }
@@ -91,10 +137,31 @@ namespace Example
         public void Render(Matrix4 camera)
 		{
             if (ReferenceEquals(null, shaderObject)) return;
-            GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
-			shaderObject.Activate();
-            Random random = new Random();
+            if (ReferenceEquals(null, shaderShadow)) return;
 
+            var light = cameraLight.CalcMatrix().ToOpenTK();
+
+            shaderShadow.Activate();
+            fboShadowMap.Activate();
+            GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
+            GL.UniformMatrix4(shaderShadow.GetUniformLocation("camera"), true, ref light);
+            this.DrawScene(shaderShadow, light);
+            fboShadowMap.Deactivate();
+            shaderShadow.Deactivate();
+
+            GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
+            shaderObject.Activate();
+            fboShadowMap.Texture.Activate();
+            GL.UniformMatrix4(shaderObject.GetUniformLocation("camera"), true, ref camera);
+            GL.UniformMatrix4(shaderObject.GetUniformLocation("light"), true, ref light);
+            this.DrawScene(shaderObject, camera);
+
+            fboShadowMap.Texture.Deactivate();
+            shaderObject.Deactivate();
+        }
+
+        private void DrawScene(Shader shader, Matrix4 camera)
+        {
             // calculate value for candle light flickering
             timeSpan = stopWatch.Elapsed;
             double elapsedTime = timeSpan.TotalMilliseconds;
@@ -103,92 +170,66 @@ namespace Example
 
             // pass shader parameters
             // set and pass light values
-            GL.Uniform3(shaderObject.GetUniformLocation("moonLightDirection"), new Vector3(0, 10, 10).Normalized());
-            GL.Uniform4(shaderObject.GetUniformLocation("moonLightColor"), new Color4(0.2f, 0.2f, 0.5f, 1f));
-            GL.Uniform3(shaderObject.GetUniformLocation("candleLightPosition"), new Vector3(0, 0.5f, 0));
-            GL.Uniform4(shaderObject.GetUniformLocation("candleLightColor"), new Color4(candleFlickering, 0.6f*candleFlickering, 0f, 1.0f));
-            GL.Uniform3(shaderObject.GetUniformLocation("spotLightPosition"), lightPosition.Normalized());
-            GL.Uniform3(shaderObject.GetUniformLocation("spotLightDirection"), new Vector3(lightPosition[0]*(-1), -1.1f, lightPosition[2]*(-1)).Normalized());
-            GL.Uniform1(shaderObject.GetUniformLocation("spotLightAngle"), DMS.Geometry.MathHelper.DegreesToRadians(10f));
-            GL.Uniform4(shaderObject.GetUniformLocation("spotLightColor"), new Color4(0, 0, 1f, 1f));
-            GL.Uniform4(shaderObject.GetUniformLocation("ambientLightColor"), new Color4(0.1f, 0.1f, 0.2f, 1f));
+            GL.Uniform3(shader.GetUniformLocation("moonLightDirection"), new Vector3(0, -10, 10).Normalized());
+            GL.Uniform4(shader.GetUniformLocation("moonLightColor"), new Color4(.05f, .05f, .25f, 1f));
+            GL.Uniform3(shader.GetUniformLocation("candleLightPosition"), new Vector3(0, 0.5f, 0));
+            GL.Uniform4(shader.GetUniformLocation("candleLightColor"), new Color4(candleFlickering, 0.6f * candleFlickering, 0f, 1.0f));
+            GL.Uniform3(shader.GetUniformLocation("spotLightPosition"), lightPosition.Normalized());
+            GL.Uniform3(shader.GetUniformLocation("spotLightDirection"), new Vector3(lightPosition[0] * (-1), -1.1f, lightPosition[2] * (-1)).Normalized());
+            GL.Uniform1(shader.GetUniformLocation("spotLightAngle"), DMS.Geometry.MathHelper.DegreesToRadians(10f));
+            GL.Uniform4(shader.GetUniformLocation("spotLightColor"), new Color4(0, 0, 1f, 1f));
+            GL.Uniform4(shader.GetUniformLocation("ambientLightColor"), new Color4(0.1f, 0.1f, 0.2f, 1f));
 
             // camera
-            var cam = this.camera.CalcMatrix().ToOpenTK();
-            GL.Uniform3(shaderObject.GetUniformLocation("cameraPosition"), this.camera.CalcPosition().ToOpenTK());
-            GL.UniformMatrix4(shaderObject.GetUniformLocation("camera"), true, ref camera);
+            GL.Uniform3(shader.GetUniformLocation("cameraPosition"), this.camera.CalcPosition().ToOpenTK());
+            GL.UniformMatrix4(shader.GetUniformLocation("camera"), true, ref camera);
 
             // environment
             // different ids to differentiate spheres in fragment shader
             var id = 1;
-            envMap_tex.Activate();
-            GL.Uniform1(shaderObject.GetUniformLocation("id"), id);
-            this.environment.Draw();
-            envMap_tex.Deactivate();
+            //envMap_tex.Activate();
+            //GL.Uniform1(shader.GetUniformLocation("id"), id);
+            //this.environment.Draw();
+            //envMap_tex.Deactivate();
 
             // objects
             id = 2;
-            GL.Uniform1(shaderObject.GetUniformLocation("id"), id);
+            GL.Uniform1(shader.GetUniformLocation("id"), id);
 
             // draw objects
             // cloud
             if (this.rainState)
             {
-                this.cloud.SetAttribute(shaderObject.GetAttributeLocation("instancePosition"), new Vector3[] { this.rainPosition }, VertexAttribPointerType.Float, 3, true);
-                this.cloud.SetAttribute(shaderObject.GetAttributeLocation("materialColor"), new Color4[] { new Color4(0.1f, 0.1f, 0.6f, 1f) }, VertexAttribPointerType.Float, 4, true);
+                this.cloud.SetAttribute(shader.GetAttributeLocation("instancePosition"), new Vector3[] { this.rainPosition }, VertexAttribPointerType.Float, 3, true);
+                this.cloud.SetAttribute(shader.GetAttributeLocation("materialColor"), new Color4[] { new Color4(0.1f, 0.1f, 0.6f, 1f) }, VertexAttribPointerType.Float, 4, true);
                 this.cloud.Draw();
             }
             // plate 1
-            this.plate.SetAttribute(shaderObject.GetAttributeLocation("instancePosition"), new Vector3[] { this.platePosition1 }, VertexAttribPointerType.Float, 3, true);
-            this.plate.SetAttribute(shaderObject.GetAttributeLocation("materialColor"), new Color4[] { new Color4(1f, 1f, 1f, 1f) }, VertexAttribPointerType.Float, 4, true);
+            this.plate.SetAttribute(shader.GetAttributeLocation("instancePosition"), new Vector3[] { this.platePosition1 }, VertexAttribPointerType.Float, 3, true);
+            this.plate.SetAttribute(shader.GetAttributeLocation("materialColor"), new Color4[] { new Color4(1f, 1f, 1f, 1f) }, VertexAttribPointerType.Float, 4, true);
             this.plate.Draw();
             // plate 2
-            this.plate.SetAttribute(shaderObject.GetAttributeLocation("instancePosition"), new Vector3[] { this.platePosition2 }, VertexAttribPointerType.Float, 3, true);
+            this.plate.SetAttribute(shader.GetAttributeLocation("instancePosition"), new Vector3[] { this.platePosition2 }, VertexAttribPointerType.Float, 3, true);
+            this.plate.SetAttribute(shader.GetAttributeLocation("materialColor"), new Color4[] { new Color4(1f, 1f, 1f, 1f) }, VertexAttribPointerType.Float, 4, true);
             this.plate.Draw();
             // light sphere
-            this.lightSphere.SetAttribute(shaderObject.GetAttributeLocation("instancePosition"), new Vector3[] { this.lightPosition }, VertexAttribPointerType.Float, 3, true);
-            this.lightSphere.SetAttribute(shaderObject.GetAttributeLocation("materialColor"), new Color4[] { new Color4(1f, 1f, 1f, 1f) }, VertexAttribPointerType.Float, 4, true);
+            this.lightSphere.SetAttribute(shader.GetAttributeLocation("instancePosition"), new Vector3[] { this.lightPosition }, VertexAttribPointerType.Float, 3, true);
+            this.lightSphere.SetAttribute(shader.GetAttributeLocation("materialColor"), new Color4[] { new Color4(1f, 1f, 1f, 1f) }, VertexAttribPointerType.Float, 4, true);
             this.lightSphere.Draw();
             // table
             id = 3;
-            GL.Uniform1(shaderObject.GetUniformLocation("id"), id);
-            tableCloth_tex.Activate();
-            this.table.SetAttribute(shaderObject.GetAttributeLocation("instancePosition"), new Vector3[] { this.tablePosition }, VertexAttribPointerType.Float, 3, true);
-            this.table.SetAttribute(shaderObject.GetAttributeLocation("materialColor"), new Color4[] { new Color4(1f, 1f, 1f, 1f) }, VertexAttribPointerType.Float, 4, true);
+            GL.Uniform1(shader.GetUniformLocation("id"), id);
+            //tableCloth_tex.Activate();
+            this.table.SetAttribute(shader.GetAttributeLocation("instancePosition"), new Vector3[] { this.tablePosition }, VertexAttribPointerType.Float, 3, true);
+            this.table.SetAttribute(shader.GetAttributeLocation("materialColor"), new Color4[] { new Color4(1f, 1f, 1f, 1f) }, VertexAttribPointerType.Float, 4, true);
             this.table.Draw();
-            tableCloth_tex.Deactivate();
+            //tableCloth_tex.Deactivate();
             // candle
-            candle_tex.Activate();
-            this.candle.SetAttribute(shaderObject.GetAttributeLocation("instancePosition"), new Vector3[] { this.candlePosition }, VertexAttribPointerType.Float, 3, true);
-            this.candle.SetAttribute(shaderObject.GetAttributeLocation("materialColor"), new Color4[] { new Color4(1f, 1f, 1f, 1f) }, VertexAttribPointerType.Float, 4, true);
+            //candle_tex.Activate();
+            this.candle.SetAttribute(shader.GetAttributeLocation("instancePosition"), new Vector3[] { this.candlePosition }, VertexAttribPointerType.Float, 3, true);
+            this.candle.SetAttribute(shader.GetAttributeLocation("materialColor"), new Color4[] { new Color4(1f, 1f, 1f, 1f) }, VertexAttribPointerType.Float, 4, true);
             this.candle.Draw();
-            candle_tex.Deactivate();
-
-            shaderObject.Deactivate();
-		}
-
-        public static readonly string ShaderName = nameof(shaderObject);
-        private Shader shaderObject;
-        private bool rainState;
-		private Stopwatch stopWatch = new Stopwatch();
-        private VAO cloud;
-        private VAO table;
-        private VAO candle;
-        private VAO plate;
-        private VAO lightSphere;
-        private VAO environment;
-        private CameraOrbit camera = new CameraOrbit();
-        private Texture envMap_tex;
-        private Texture tableCloth_tex;
-        private Texture candle_tex;
-        private QueryObject glTimer = new QueryObject();
-        private TimeSpan timeSpan;
-
-        private Vector3 rainPosition;
-        private Vector3 tablePosition;
-        private Vector3 lightPosition;
-        private Vector3 candlePosition;
-        private Vector3 platePosition1;
-        private Vector3 platePosition2;
+            //candle_tex.Deactivate();
+        }
     }
 }
