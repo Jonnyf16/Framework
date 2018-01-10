@@ -12,12 +12,10 @@ namespace Example
         private Shader shaderFlame;
         private Stopwatch timeSource = new Stopwatch();
         private VAO flame = new VAO();
-        private Vector3 firePosition;
 
         public VisualFlame(Vector3 firePosition)
 		{  
 			timeSource.Start();
-            this.firePosition = firePosition;
         }
 
         public void ShaderChanged(string name, Shader shader)
@@ -28,14 +26,17 @@ namespace Example
      
         }
 
-		public void Update()
+		public void Update(Vector3 firePosition, Vector3 windDirection)
 		{
             if (ReferenceEquals(this.shaderFlame, null)) return;
+            this.flame.SetAttribute(this.shaderFlame.GetAttributeLocation("instance_position"), new Vector3[] { firePosition }, VertexAttribPointerType.Float, 3);
+            this.flame.SetAttribute(this.shaderFlame.GetAttributeLocation("wind_direction"), new Vector3[] { windDirection }, VertexAttribPointerType.Float, 3);
         }
 
-        public void Render(Matrix4 camera, int windowHeight, int windowWidth)
+        public void Render(Matrix4 camera, int windowHeight, int windowWidth, float camAzimuth)
         {
             if (ReferenceEquals(this.shaderFlame, null)) return;
+
             GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.One);
             GL.BlendEquation(BlendEquationMode.FuncAdd);
             GL.Enable(EnableCap.Blend);
@@ -47,7 +48,7 @@ namespace Example
             GL.Uniform1(this.shaderFlame.GetUniformLocation("iGlobalTime"), (float)timeSource.Elapsed.TotalSeconds);
             GL.Uniform2(this.shaderFlame.GetUniformLocation("iResolution"), new Vector2(windowHeight, windowWidth));
             GL.UniformMatrix4(this.shaderFlame.GetUniformLocation("camera"), true, ref camera);
-            this.flame.SetAttribute(this.shaderFlame.GetAttributeLocation("instance_position"), new Vector3[] { this.firePosition }, VertexAttribPointerType.Float, 3);
+            GL.Uniform1(this.shaderFlame.GetUniformLocation("camAzimuth"), camAzimuth);
             this.flame.Activate();
             GL.DrawArrays(PrimitiveType.Points, 0, 1);
             this.flame.Deactivate();

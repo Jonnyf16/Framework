@@ -1,13 +1,13 @@
 #version 430 core
 
 uniform float iGlobalTime;
+uniform float camAzimuth;
+in vec3 wind_dir;
+
 out vec4 fragColor;
 
+const float PI = 3.14159265359;
 
-//////////////////////
-// Fire Flame shader
-
-// procedural noise from IQ
 vec2 hash( vec2 p )
 {
 	p = vec2( dot(p,vec2(127.1,311.7)),
@@ -17,8 +17,8 @@ vec2 hash( vec2 p )
 
 float noise( in vec2 p )
 {
-	const float K1 = 0.366025404; // (sqrt(3)-1)/2;
-	const float K2 = 0.211324865; // (3-sqrt(3))/6;
+	const float K1 = 0.366025404;
+	const float K2 = 0.211324865;
 	
 	vec2 i = floor( p + (p.x+p.y)*K1 );
 	
@@ -56,11 +56,17 @@ void main()
 	flameCoord.x *= 5.0;
 	flameCoord.y *= 2.0;
 
+	// wind
+	float wind_x = clamp(wind_dir.x, -2, 2) * cos(camAzimuth * 0.00556 * PI);
+	float wind_z = clamp(wind_dir.z, -2, 2) * cos((camAzimuth * 0.00556 - 0.5) * PI);
+
     // flame parameters
 	float strength = 1.0;
     float speed = 5.0;
-    float disort_ver = 2.0*sin(iGlobalTime);
+    float disort_ver = wind_x + wind_z;
     float disort_hor = disort_ver;
+
+	// create horizonatal 'anti' movement to balance out horizontal distortion
 	flameCoord.x -= disort_ver * .45;
     
     // creates background noise

@@ -50,6 +50,7 @@ namespace Example
             this.camera.Distance = 3;
             this.camera.FovY = 70;
             this.camera.Elevation = 15;
+            this.camera.Azimuth = 0;
 		}
 
 		public void ShaderChanged(string name, Shader shader)
@@ -68,12 +69,11 @@ namespace Example
             this.visualSmoke.Update(time, this.smokeState, this.smokePosition, this.windDirection);
             this.visualRain.Update(time, this.rainState, this.rainPosition, this.windDirection);
             this.visualObjects.Update(this.rainState, this.rainPosition + this.cloudTranslation, this.lightPosition);
-			glTimerUpdate.Deactivate();
-            this.visualFlame.Update();
+            this.visualFlame.Update(this.firePosition, this.windDirection);
             glTimerUpdate.Deactivate();
-		}
+        }
 
-		public void Render()
+        public void Render()
 		{
 			glTimerRender.Activate(QueryTarget.TimeElapsed);
 			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
@@ -81,7 +81,7 @@ namespace Example
             this.visualObjects.Render(cam);
             this.visualSmoke.Render(cam);
             this.visualRain.Render(cam);
-            this.visualFlame.Render(cam, app.GameWindow.Height, app.GameWindow.Width);
+            this.visualFlame.Render(cam, app.GameWindow.Height, app.GameWindow.Width, camera.Azimuth);
 
             glTimerRender.Deactivate();
 
