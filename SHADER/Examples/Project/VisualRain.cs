@@ -12,7 +12,7 @@ namespace Example
             this.rainState = false;
             this.rainPosition = rainStartPosition;
             this.windDirection = windDirection;
-            texStar = TextureLoader.FromBitmap(Resourcen.water_splash);
+            texStar = TextureLoader.FromBitmap(Resourcen.rain_tex);
 			particleSystem.ReleaseInterval = 0.003f;
 			particleSystem.OnParticleCreate += Create;
 			particleSystem.OnAfterParticleUpdate += OnAfterParticleUpdate;
