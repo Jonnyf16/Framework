@@ -61,8 +61,8 @@ void main()
 	float wind_z = clamp(wind_dir.z, -2, 2) * cos((camAzimuth * 0.00556 - 0.5) * PI);
 
     // flame parameters
-	float strength = 1.0;
-    float speed = 5.0;
+	float strength = 1.0 + clamp(wind_dir.x + wind_dir.z, 0.0, 1.0);
+    float speed = 3.0 + clamp(wind_dir.x + wind_dir.z, 0.0, 2.0);
     float disort_ver = wind_x + wind_z;
     float disort_hor = disort_ver;
 
