@@ -130,6 +130,8 @@
     <None Include="Resources\objects.frag" />
     <None Include="Resources\objects.vert" />
     <None Include="Resources\plate.obj" />
+    <None Include="Resources\rain.frag" />
+    <None Include="Resources\rain.vert" />
     <None Include="Resources\smoke.frag" />
     <None Include="Resources\smoke.vert" />
   </ItemGroup>
@@ -141,22 +143,16 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\starAlpha.png" />
+    <None Include="Resources\smoke_tex.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\smoke_256a.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\suzanne.obj" />
     <None Include="Resources\table.obj" />
-    <None Include="Resources\water_splash.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\beach.jpg" />
+    <Content Include="Resources\rain_tex.png" />
     <Content Include="Resources\candle_tex.jpg" />
     <Content Include="Resources\environment.jpg" />
     <None Include="Resources\tablecloth_tex.jpg" />
-    <Content Include="Resources\water_splash_original.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

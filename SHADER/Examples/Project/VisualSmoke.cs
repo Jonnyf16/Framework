@@ -13,7 +13,7 @@ namespace Example
             this.smokeState = false;
 			this.smokePosition = smokePosition;
 			this.windDirection = windDirection;
-			texStar = TextureLoader.FromBitmap(Resourcen.smoke); //resourceProvider.Get<Texture>(nameof(Resourcen.smoke)).Value;
+			texStar = TextureLoader.FromBitmap(Resourcen.smoke_tex);
 			particleSystem.ReleaseInterval = 0.02f;
 			particleSystem.OnParticleCreate += Create;
 		}

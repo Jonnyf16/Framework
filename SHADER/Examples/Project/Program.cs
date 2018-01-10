@@ -29,13 +29,11 @@ namespace Example
 
 		private static void LoadResources(ResourceManager resourceManager)
 		{
-			resourceManager.Add(nameof(Resourcen.smoke), new ResourceTextureBitmap(Resourcen.smoke));
 			var dir = Path.GetDirectoryName(PathTools.GetSourceFilePath()) + "/Resources/";
-            // TODO: change name of "smoke" shader to "particle"
 			resourceManager.AddShader(VisualSmoke.ShaderName, dir + "smoke.vert", dir + "smoke.frag"
 				, Resourcen.smoke_vert, Resourcen.smoke_frag);
 			resourceManager.AddShader(VisualRain.ShaderName, dir + "rain.vert", dir + "rain.frag"
-				, Resourcen.smoke_vert, Resourcen.smoke_frag);
+				, Resourcen.rain_vert, Resourcen.rain_frag);
             resourceManager.AddShader(VisualObjects.ShaderName, dir + "objects.vert", dir + "objects.frag"
                 , Resourcen.objects_vert, Resourcen.objects_frag);
             resourceManager.AddShader(VisualFlame.ShaderName, dir + "flame.vert", dir + "flame.frag"
