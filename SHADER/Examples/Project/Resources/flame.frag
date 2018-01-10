@@ -57,10 +57,11 @@ void main()
 	flameCoord.y *= 2.0;
 
     // flame parameters
-	float strength = 5.0;
-    float speed = 3.0;
+	float strength = 1.0;
+    float speed = 5.0;
     float disort_ver = 2.0*sin(iGlobalTime);
     float disort_hor = disort_ver;
+	flameCoord.x -= disort_ver * .45;
     
     // creates background noise
 	float fbm_ = fbm(strength * flameCoord - vec2(0, iGlobalTime * speed));
@@ -87,6 +88,4 @@ void main()
     // color
 	vec3 col = vec3(1.5 * flame, 1.5 * pow(flame, 3.0), pow(flame, 6.0));
 	fragColor = vec4(vec3(col), 1.0);
-	
-		
 }

@@ -1,4 +1,5 @@
-﻿using DMS.OpenGL;
+﻿using DMS.Application;
+using DMS.OpenGL;
 using DMS.Geometry;
 using OpenTK;
 using OpenTK.Input;
@@ -11,8 +12,10 @@ namespace Example
     {
 		public CameraOrbit OrbitCamera { get { return camera; } }
 
-		public MainVisual(int windowHeight, int windowWidth)
+		public MainVisual(ExampleApplication app)
 		{
+            this.app = app;
+
             // light setup
             this.lightPosition = new Vector3(0, 0.5f, 0);
 
@@ -39,7 +42,8 @@ namespace Example
             this.visualSmoke = new VisualSmoke(Vector3.Zero, this.windDirection);
 
             // flame setup
-            this.visualFlame = new VisualFlame(windowHeight, windowWidth);
+            this.firePosition = new Vector3(.0f, .55f, .0f);
+            this.visualFlame = new VisualFlame(this.firePosition);
 
             // camera setup
             this.camera.FarClip = 80;
@@ -77,16 +81,16 @@ namespace Example
             this.visualObjects.Render(cam);
             this.visualSmoke.Render(cam);
             this.visualRain.Render(cam);
-            this.visualFlame.Render(cam);
+            this.visualFlame.Render(cam, app.GameWindow.Height, app.GameWindow.Width);
 
             glTimerRender.Deactivate();
 
-			Console.Write("Update:");
-			Console.Write(glTimerUpdate.ResultLong / 1e6);
-			Console.Write("msec  Render:");
-			Console.Write(glTimerRender.ResultLong / 1e6);
-			Console.WriteLine("msec");
-		}
+            Console.Write("Update:");
+            Console.Write(glTimerUpdate.ResultLong / 1e6);
+            Console.Write("msec  Render:");
+            Console.Write(glTimerRender.ResultLong / 1e6);
+            Console.WriteLine("msec");
+        }
 
         private void checkRainCandleCollision()
         {
@@ -185,6 +189,8 @@ namespace Example
         private Vector3 smokePosition;
         private Vector3 windDirection;
         private Vector3 lightPosition;
+        private Vector3 firePosition;
+        private ExampleApplication app;
 
     }
 }

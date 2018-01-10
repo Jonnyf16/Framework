@@ -11,13 +11,13 @@ namespace Example
 		[STAThread]
 		private static void Main()
 		{
-            var windowHeight = 512;
-            var windowWidth = 512;
+            var windowHeight = 1280;
+            var windowWidth = 720;
 			var app = new ExampleApplication(windowHeight, windowWidth);
             var i = app.GameWindow.Height;
 			LoadResources(app.ResourceManager);
 			var controller = new Controller();
-			MainVisual visual = new MainVisual(windowHeight, windowWidth);
+			MainVisual visual = new MainVisual(app);
 			app.ResourceManager.ShaderChanged += visual.ShaderChanged;
 			var timeSource = new Stopwatch();
 			app.GameWindow.ConnectEvents(visual.OrbitCamera);
