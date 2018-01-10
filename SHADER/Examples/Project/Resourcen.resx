@@ -175,4 +175,19 @@
   <data name="shadow_vert" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>resources\shadow.vert;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="fork" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\fork.obj;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="knife" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\knife.obj;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="tableTop" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\tabletop.obj;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="tableCloth" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\tablecloth.obj;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="wineGlass" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\wineglass.obj;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
 </root>

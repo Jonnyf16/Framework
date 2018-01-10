@@ -123,6 +123,26 @@ namespace Example {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
+        internal static byte[] fork {
+            get {
+                object obj = ResourceManager.GetObject("fork", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] knife {
+            get {
+                object obj = ResourceManager.GetObject("knife", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
         internal static byte[] objects_frag {
             get {
                 object obj = ResourceManager.GetObject("objects_frag", resourceCulture);
@@ -241,12 +261,42 @@ namespace Example {
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] tableCloth {
+            get {
+                object obj = ResourceManager.GetObject("tableCloth", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap tablecloth_tex {
             get {
                 object obj = ResourceManager.GetObject("tablecloth_tex", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] tableTop {
+            get {
+                object obj = ResourceManager.GetObject("tableTop", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] wineGlass {
+            get {
+                object obj = ResourceManager.GetObject("wineGlass", resourceCulture);
+                return ((byte[])(obj));
             }
         }
     }
