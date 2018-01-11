@@ -254,7 +254,7 @@ namespace Example
                 candleLightStrength = 0.6f;
             GL.Uniform3(shader.GetUniformLocation("moonLightDirection"), new Vector3(0, -10, 10).Normalized());
             GL.Uniform4(shader.GetUniformLocation("moonLightColor"), new Color4(.05f, .05f, .25f, 1f));
-            GL.Uniform3(shader.GetUniformLocation("candleLightPosition"), new Vector3(0, .5f, 0));
+            GL.Uniform3(shader.GetUniformLocation("candleLightPosition"), lightPosition);
             GL.Uniform4(shader.GetUniformLocation("candleLightColor"), new Color4(candleLightStrength + candleFlickering, .6f * (candleLightStrength + candleFlickering), 0f, 1f));
             GL.Uniform3(shader.GetUniformLocation("spotLightPosition"), lightPosition.Normalized());
             GL.Uniform3(shader.GetUniformLocation("spotLightDirection"), new Vector3(lightPosition[0] * (-1), -1.1f, lightPosition[2] * (-1)).Normalized());
