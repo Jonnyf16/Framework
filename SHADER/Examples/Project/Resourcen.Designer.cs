@@ -303,9 +303,29 @@ namespace Example {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
-        internal static byte[] wineGlass {
+        internal static byte[] wineBottle {
             get {
-                object obj = ResourceManager.GetObject("wineGlass", resourceCulture);
+                object obj = ResourceManager.GetObject("wineBottle", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] wineBottleLabel {
+            get {
+                object obj = ResourceManager.GetObject("wineBottleLabel", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] wineBottleShutter {
+            get {
+                object obj = ResourceManager.GetObject("wineBottleShutter", resourceCulture);
                 return ((byte[])(obj));
             }
         }

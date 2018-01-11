@@ -141,7 +141,9 @@
     <None Include="Resources\smoke.vert" />
     <None Include="Resources\tableCloth.obj" />
     <None Include="Resources\tableTop.obj" />
-    <None Include="Resources\wineGlass.obj" />
+    <None Include="Resources\wineBottle.obj" />
+    <None Include="Resources\wineBottleLabel.obj" />
+    <None Include="Resources\wineBottleShutter.obj" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resourcen.resx">

@@ -187,10 +187,16 @@
   <data name="tableCloth" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>resources\tablecloth.obj;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="wineGlass" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>resources\wineglass.obj;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
   <data name="grapes" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\grapes.obj;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="wineBottle" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\winebottle.obj;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="wineBottleLabel" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\winebottlelabel.obj;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="wineBottleShutter" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\winebottleshutter.obj;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
 </root>

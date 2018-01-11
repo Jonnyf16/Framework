@@ -24,14 +24,16 @@ namespace Example
             this.rainPosition = new Vector3(-.5f, 1.2f, -.5f);
             this.visualRain = new VisualRain(this.rainPosition, this.windDirection);
 
-            // cloud setup
-            this.cloudTranslation = new Vector3(.0f, .1f, .0f);
-            this.visualObjects = new VisualObjects(this.rainPosition, this.lightPosition);
-
             // candle setup
             this.candleState = true;
-            this.candlePosition = new Vector3(.0f);
+            this.candlePosition = new Vector3(.0f, -.02f, .0f);
             this.candleThickness = .15f;
+
+            // cloud setup
+            this.cloudTranslation = new Vector3(.0f, .1f, .0f);
+
+            // objects setup
+            this.visualObjects = new VisualObjects(this.rainPosition, this.candlePosition, this.lightPosition);
 
             // smoke setup
             this.smokeState = false;
@@ -63,7 +65,7 @@ namespace Example
             glTimerUpdate.Activate(QueryTarget.TimeElapsed);
             this.visualSmoke.Update(time, this.smokeState, this.smokePosition, this.windDirection);
             this.visualRain.Update(time, this.rainState, this.rainPosition, this.windDirection);
-            this.visualObjects.Update(this.rainState, this.rainPosition + this.cloudTranslation, this.lightPosition, this.smokeState);
+            this.visualObjects.Update(this.rainState, this.rainPosition + this.cloudTranslation, this.candlePosition, this.lightPosition, this.smokeState);
 			glTimerUpdate.Deactivate();
             this.visualFlame.Update();
             glTimerUpdate.Deactivate();
