@@ -3,6 +3,7 @@
 uniform mat4 camera;
 uniform mat4 light;
 uniform int id;
+uniform int noShadow;
 uniform vec3 cameraPosition;
 
 in vec4 position;

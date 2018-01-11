@@ -126,6 +126,7 @@
     <None Include="Resources\candle.obj" />
     <None Include="Resources\cloud.obj" />
     <None Include="Resources\fork.obj" />
+    <None Include="Resources\grapes.obj" />
     <None Include="Resources\knife.obj" />
     <None Include="Resources\shadow.frag" />
     <None Include="Resources\shadow.vert" />

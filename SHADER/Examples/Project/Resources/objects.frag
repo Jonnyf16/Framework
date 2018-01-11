@@ -1,5 +1,6 @@
 #version 430 core
 uniform int id;
+uniform int noShadow;
 uniform sampler2D tex;
 uniform sampler2D texShadowMap;
 uniform mat4 camera;
@@ -126,7 +127,7 @@ void main()
 				// shadow calculation
 		vec3 coord = shadowLightPosition.xyz / shadowLightPosition.w;
 		float depth = texture(texShadowMap, coord.xy * .5 + 0.5).r;
-		if (depth + 0.001 < coord.z)
+		if (depth + 0.001 < coord.z && noShadow == 0)
 			color *= 0.3;
 	}
 }

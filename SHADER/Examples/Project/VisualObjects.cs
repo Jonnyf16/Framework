@@ -23,6 +23,7 @@ namespace Example
         private VAO candle;
         private VAO plate;
         private VAO wineGlass;
+        private VAO grapes;
         private VAO knife;
         private VAO fork;
         private VAO lightSphere;
@@ -43,7 +44,9 @@ namespace Example
         private Vector3 candlePosition;
         private Vector3 platePosition1;
         private Vector3 platePosition2;
+        private Vector3 platePosition3;
         private Vector3 wineGlassPosition;
+        private Vector3 grapePosition;
         private Vector3 knifePosition;
         private Vector3 forkPosition;
 
@@ -53,11 +56,13 @@ namespace Example
             this.rainPosition = rainPosition;
             this.tablePosition = new Vector3(.0f, -1.42f, .0f);
             this.candlePosition = new Vector3(.0f, -.02f, .0f);
-            this.platePosition1 = new Vector3(.6f, -.01f, .0f);
-            this.platePosition2 = new Vector3(-.6f, -.01f, .0f);
-            this.wineGlassPosition = new Vector3(.3f, -.01f, .65f);
-            this.knifePosition = new Vector3(-.6f, -.01f, .3f);
-            this.forkPosition = new Vector3(-.6f, -.01f, -.3f);
+            this.platePosition1 = new Vector3(.6f, -.02f, .0f);
+            this.platePosition2 = new Vector3(-.6f, -.02f, .0f);
+            this.platePosition3 = new Vector3(.3f, -.02f, .65f);
+            this.wineGlassPosition = new Vector3(.3f, -.02f, .65f);
+            this.grapePosition = new Vector3(.35f, -.02f, .62f);
+            this.knifePosition = new Vector3(-.6f, -.02f, .3f);
+            this.forkPosition = new Vector3(-.6f, -.02f, -.3f);
             this.lightPosition = lightPosition;
             this.timeSpan = stopWatch.Elapsed;
 
@@ -87,10 +92,9 @@ namespace Example
 
             // Camera Light
             cameraLight.FarClip = 50;
-            cameraLight.Distance = 8;
-            cameraLight.Elevation = 44;
-            cameraLight.Azimuth = -100;
-            //Console.WriteLine("POSITION: {0}", cameraLight.CalcPosition());
+            cameraLight.Distance = 1;
+            cameraLight.Elevation = 90;
+            cameraLight.Azimuth = 0;
         }
 
 		public void ShaderChanged(string name, Shader shader)
@@ -119,6 +123,9 @@ namespace Example
                 // wine glass
                 Mesh wineGlassMesh = Obj2Mesh.FromObj(Resourcen.wineGlass);
                 this.wineGlass = VAOLoader.FromMesh(wineGlassMesh, shader);
+                // grapes
+                Mesh grapesMesh = Obj2Mesh.FromObj(Resourcen.grapes);
+                this.grapes = VAOLoader.FromMesh(grapesMesh, shader);
                 // knife
                 Mesh knifeMesh = Obj2Mesh.FromObj(Resourcen.knife);
                 //knifeMesh.Transform(System.Numerics.Matrix4x4.CreateRotationX(-90f));
@@ -130,9 +137,9 @@ namespace Example
                 Mesh lightSphereMesh = Meshes.CreateSphere(0.1f, 4);
                 this.lightSphere = VAOLoader.FromMesh(lightSphereMesh, shader);
                 // environment sphere
-                //var sphere = Meshes.CreateSphere(3, 4);
-                //var envSphere = sphere.SwitchTriangleMeshWinding();
-                //this.environment = VAOLoader.FromMesh(envSphere, shader);
+                var sphere = Meshes.CreateSphere(3, 4);
+                var envSphere = sphere.SwitchTriangleMeshWinding();
+                this.environment = VAOLoader.FromMesh(envSphere, shader);
             }
             else if (ShaderShadowName == name)
             {
@@ -150,6 +157,7 @@ namespace Example
             this.rainState = rainState;
             this.rainPosition = rainPosition;
             this.lightPosition = lightPosition;
+            // TODO: delete following
             this.cloud.SetAttribute(shaderObject.GetAttributeLocation("instancePosition"), new Vector3[] { this.rainPosition }, VertexAttribPointerType.Float, 3, true);
             this.tableCloth.SetAttribute(shaderObject.GetAttributeLocation("instancePosition"), new Vector3[] { this.tablePosition }, VertexAttribPointerType.Float, 3, true);
             this.tableCloth.SetAttribute(shaderObject.GetAttributeLocation("instancePosition"), new Vector3[] { this.tablePosition }, VertexAttribPointerType.Float, 3, true);
@@ -157,6 +165,8 @@ namespace Example
             this.candle.SetAttribute(shaderObject.GetAttributeLocation("instancePosition"), new Vector3[] { this.candlePosition }, VertexAttribPointerType.Float, 3, true);
             this.plate.SetAttribute(shaderObject.GetAttributeLocation("instancePosition"), new Vector3[] { this.platePosition1 }, VertexAttribPointerType.Float, 3, true);
             this.plate.SetAttribute(shaderObject.GetAttributeLocation("instancePosition"), new Vector3[] { this.platePosition2 }, VertexAttribPointerType.Float, 3, true);
+            this.plate.SetAttribute(shaderObject.GetAttributeLocation("instancePosition"), new Vector3[] { this.platePosition3 }, VertexAttribPointerType.Float, 3, true);
+            this.grapes.SetAttribute(shaderObject.GetAttributeLocation("instancePosition"), new Vector3[] { this.grapePosition }, VertexAttribPointerType.Float, 3, true);
             this.wineGlass.SetAttribute(shaderObject.GetAttributeLocation("instancePosition"), new Vector3[] { this.wineGlassPosition }, VertexAttribPointerType.Float, 3, true);
             this.knife.SetAttribute(shaderObject.GetAttributeLocation("instancePosition"), new Vector3[] { this.knifePosition }, VertexAttribPointerType.Float, 3, true);
             this.fork.SetAttribute(shaderObject.GetAttributeLocation("instancePosition"), new Vector3[] { this.forkPosition }, VertexAttribPointerType.Float, 3, true);
@@ -168,13 +178,19 @@ namespace Example
             if (ReferenceEquals(null, shaderObject)) return;
             if (ReferenceEquals(null, shaderShadow)) return;
 
-            var light = cameraLight.CalcMatrix().ToOpenTK();
+            // calculate value for candle light flickering
+            timeSpan = stopWatch.Elapsed;
+            double elapsedTime = timeSpan.TotalMilliseconds;
+            float candleFlickering = (float)Math.Sin((elapsedTime / 1000) + random.NextDouble()) / 30;
 
+            cameraLight.Distance = 1 + candleFlickering * 0.1f;
+            var light = cameraLight.CalcMatrix().ToOpenTK();
+            
             shaderShadow.Activate();
             fboShadowMap.Activate();
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
             GL.UniformMatrix4(shaderShadow.GetUniformLocation("camera"), true, ref light);
-            this.DrawScene(shaderShadow, light);
+            this.DrawScene(shaderShadow, light, candleFlickering);
             fboShadowMap.Deactivate();
             shaderShadow.Deactivate();
 
@@ -183,18 +199,14 @@ namespace Example
             fboShadowMap.Texture.Activate();
             GL.UniformMatrix4(shaderObject.GetUniformLocation("camera"), true, ref camera);
             GL.UniformMatrix4(shaderObject.GetUniformLocation("light"), true, ref light);
-            this.DrawScene(shaderObject, camera);
+            this.DrawScene(shaderObject, camera, candleFlickering);
 
             fboShadowMap.Texture.Deactivate();
             shaderObject.Deactivate();
         }
 
-        private void DrawScene(Shader shader, Matrix4 camera)
+        private void DrawScene(Shader shader, Matrix4 camera, float candleFlickering)
         {
-            // calculate value for candle light flickering
-            timeSpan = stopWatch.Elapsed;
-            double elapsedTime = timeSpan.TotalMilliseconds;
-            float candleFlickering = 0.9f + (float)Math.Sin((elapsedTime / 1000) + random.NextDouble()) / 30;
             //Console.WriteLine("Value " + candleFlickering);
 
             // pass shader parameters
@@ -202,7 +214,7 @@ namespace Example
             GL.Uniform3(shader.GetUniformLocation("moonLightDirection"), new Vector3(0, -10, 10).Normalized());
             GL.Uniform4(shader.GetUniformLocation("moonLightColor"), new Color4(.05f, .05f, .25f, 1f));
             GL.Uniform3(shader.GetUniformLocation("candleLightPosition"), new Vector3(0, 0.5f, 0));
-            GL.Uniform4(shader.GetUniformLocation("candleLightColor"), new Color4(candleFlickering, 0.6f * candleFlickering, 0f, 1.0f));
+            GL.Uniform4(shader.GetUniformLocation("candleLightColor"), new Color4(0.9f + candleFlickering, 0.6f * (0.9f + candleFlickering), 0f, 1.0f));
             GL.Uniform3(shader.GetUniformLocation("spotLightPosition"), lightPosition.Normalized());
             GL.Uniform3(shader.GetUniformLocation("spotLightDirection"), new Vector3(lightPosition[0] * (-1), -1.1f, lightPosition[2] * (-1)).Normalized());
             GL.Uniform1(shader.GetUniformLocation("spotLightAngle"), DMS.Geometry.MathHelper.DegreesToRadians(10f));
@@ -216,8 +228,10 @@ namespace Example
             // environment
             // different ids to differentiate spheres in fragment shader
             var id = 1;
+            // variable that excludes object from shadow throwing
+            var noShadow = 1;
             //envMap_tex.Activate();
-            //GL.Uniform1(shader.GetUniformLocation("id"), id);
+            GL.Uniform1(shader.GetUniformLocation("id"), id);
             //this.environment.Draw();
             //envMap_tex.Deactivate();
 
@@ -229,10 +243,13 @@ namespace Example
             // cloud
             if (this.rainState)
             {
+                GL.Uniform1(shader.GetUniformLocation("noShadow"), noShadow);
                 this.cloud.SetAttribute(shader.GetAttributeLocation("instancePosition"), new Vector3[] { this.rainPosition }, VertexAttribPointerType.Float, 3, true);
                 this.cloud.SetAttribute(shader.GetAttributeLocation("materialColor"), new Color4[] { new Color4(0.1f, 0.1f, 0.6f, 1f) }, VertexAttribPointerType.Float, 4, true);
                 this.cloud.Draw();
             }
+            noShadow = 0;
+            GL.Uniform1(shader.GetUniformLocation("noShadow"), noShadow);
             // plate 1
             this.plate.SetAttribute(shader.GetAttributeLocation("instancePosition"), new Vector3[] { this.platePosition1 }, VertexAttribPointerType.Float, 3, true);
             this.plate.SetAttribute(shader.GetAttributeLocation("materialColor"), new Color4[] { new Color4(1f, 1f, 1f, 1f) }, VertexAttribPointerType.Float, 4, true);
@@ -241,10 +258,18 @@ namespace Example
             this.plate.SetAttribute(shader.GetAttributeLocation("instancePosition"), new Vector3[] { this.platePosition2 }, VertexAttribPointerType.Float, 3, true);
             this.plate.SetAttribute(shader.GetAttributeLocation("materialColor"), new Color4[] { new Color4(1f, 1f, 1f, 1f) }, VertexAttribPointerType.Float, 4, true);
             this.plate.Draw();
+            // grape plate
+            this.plate.SetAttribute(shader.GetAttributeLocation("instancePosition"), new Vector3[] { this.platePosition3 }, VertexAttribPointerType.Float, 3, true);
+            this.plate.SetAttribute(shader.GetAttributeLocation("materialColor"), new Color4[] { new Color4(.8f, .8f, .8f, 1f) }, VertexAttribPointerType.Float, 4, true);
+            this.plate.Draw();
             // wine glass
             this.wineGlass.SetAttribute(shader.GetAttributeLocation("instancePosition"), new Vector3[] { this.wineGlassPosition }, VertexAttribPointerType.Float, 3, true);
             this.wineGlass.SetAttribute(shader.GetAttributeLocation("materialColor"), new Color4[] { new Color4(1f, 1f, 1f, 1f) }, VertexAttribPointerType.Float, 4, true);
-            this.wineGlass.Draw();
+            //this.wineGlass.Draw();
+            // grapes
+            this.grapes.SetAttribute(shader.GetAttributeLocation("instancePosition"), new Vector3[] { this.grapePosition }, VertexAttribPointerType.Float, 3, true);
+            this.grapes.SetAttribute(shader.GetAttributeLocation("materialColor"), new Color4[] { new Color4(0f, 1f, 0f, 1f) }, VertexAttribPointerType.Float, 4, true);
+            this.grapes.Draw();
             // knife
             this.knife.SetAttribute(shader.GetAttributeLocation("instancePosition"), new Vector3[] { this.knifePosition }, VertexAttribPointerType.Float, 3, true);
             this.knife.SetAttribute(shader.GetAttributeLocation("materialColor"), new Color4[] { new Color4(.5f, .5f, .5f, 1f) }, VertexAttribPointerType.Float, 4, true);
