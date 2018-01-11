@@ -15,6 +15,7 @@ namespace Example
         public static readonly string ShaderName = nameof(shaderObject);
         public static readonly string ShaderShadowName = nameof(shaderShadow);
         private bool rainState;
+        private bool smokeState;
         private Stopwatch stopWatch = new Stopwatch();
         private VAO cloud;
         private VAO tableCloth;
@@ -53,8 +54,9 @@ namespace Example
         public VisualObjects(Vector3 rainPosition, Vector3 lightPosition)
 		{
             this.rainState = false;
+            this.smokeState = false;
             this.rainPosition = rainPosition;
-            this.tablePosition = new Vector3(.0f, -1.42f, .0f);
+            this.tablePosition = new Vector3(.0f, -1.42f, -.1f);
             this.candlePosition = new Vector3(.0f, -.02f, .0f);
             this.platePosition1 = new Vector3(.6f, -.02f, .0f);
             this.platePosition2 = new Vector3(-.6f, -.02f, .0f);
@@ -150,13 +152,14 @@ namespace Example
 
 		public CameraOrbit Camera { get { return camera; } }
 
-        public void Update(bool rainState, Vector3 rainPosition, Vector3 lightPosition)
+        public void Update(bool rainState, Vector3 rainPosition, Vector3 lightPosition, bool smokeState)
         {
             if (ReferenceEquals(shaderObject, null)) return;
             // update parameters
             this.rainState = rainState;
             this.rainPosition = rainPosition;
             this.lightPosition = lightPosition;
+            this.smokeState = smokeState;
             // TODO: delete following
             this.cloud.SetAttribute(shaderObject.GetAttributeLocation("instancePosition"), new Vector3[] { this.rainPosition }, VertexAttribPointerType.Float, 3, true);
             this.tableCloth.SetAttribute(shaderObject.GetAttributeLocation("instancePosition"), new Vector3[] { this.tablePosition }, VertexAttribPointerType.Float, 3, true);
@@ -181,9 +184,12 @@ namespace Example
             // calculate value for candle light flickering
             timeSpan = stopWatch.Elapsed;
             double elapsedTime = timeSpan.TotalMilliseconds;
-            float candleFlickering = (float)Math.Sin((elapsedTime / 1000) + random.NextDouble()) / 30;
-
-            cameraLight.Distance = 1 + candleFlickering * 0.1f;
+            var factor = 1;
+            if (smokeState)
+                factor = 4;
+            float candleFlickering = (float)Math.Sin((elapsedTime / 1000 / factor) + (0.2 + random.NextDouble())) / 30 * factor;
+            // setup light for shadow 
+            cameraLight.Distance = 1.1f + candleFlickering;
             var light = cameraLight.CalcMatrix().ToOpenTK();
             
             shaderShadow.Activate();
@@ -214,7 +220,10 @@ namespace Example
             GL.Uniform3(shader.GetUniformLocation("moonLightDirection"), new Vector3(0, -10, 10).Normalized());
             GL.Uniform4(shader.GetUniformLocation("moonLightColor"), new Color4(.05f, .05f, .25f, 1f));
             GL.Uniform3(shader.GetUniformLocation("candleLightPosition"), new Vector3(0, 0.5f, 0));
-            GL.Uniform4(shader.GetUniformLocation("candleLightColor"), new Color4(0.9f + candleFlickering, 0.6f * (0.9f + candleFlickering), 0f, 1.0f));
+            var candleLightStrength = 0.9f;
+            if (smokeState)
+                candleLightStrength = 0.6f;
+            GL.Uniform4(shader.GetUniformLocation("candleLightColor"), new Color4(candleLightStrength + candleFlickering, 0.6f * (candleLightStrength + candleFlickering), 0f, 1.0f));
             GL.Uniform3(shader.GetUniformLocation("spotLightPosition"), lightPosition.Normalized());
             GL.Uniform3(shader.GetUniformLocation("spotLightDirection"), new Vector3(lightPosition[0] * (-1), -1.1f, lightPosition[2] * (-1)).Normalized());
             GL.Uniform1(shader.GetUniformLocation("spotLightAngle"), DMS.Geometry.MathHelper.DegreesToRadians(10f));
