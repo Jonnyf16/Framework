@@ -44,8 +44,8 @@ namespace Example
 			Func<float> Rnd01 = () => (float)random.NextDouble();
 			Func<float> RndCoord = () => (Rnd01() - 0.5f) * 2.0f;
 
-			//if collision with ground plane
-			if (particle.Position.Y < 0)
+			// if collision with table
+			if (particle.Position.Y < 0 && particle.Position.X > -0.95 && particle.Position.X < 0.95 && particle.Position.Z > -0.95 && particle.Position.Z < 0.95)
 			{
                 //slightly different upward vectors
                 var direction = new Vector3(RndCoord(), RndCoord(), RndCoord()).Normalized();

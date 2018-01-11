@@ -125,6 +125,9 @@
     <None Include="readme.md" />
     <None Include="Resources\candle.obj" />
     <None Include="Resources\cloud.obj" />
+    <None Include="Resources\fork.obj" />
+    <None Include="Resources\grapes.obj" />
+    <None Include="Resources\knife.obj" />
     <None Include="Resources\shadow.frag" />
     <None Include="Resources\shadow.vert" />
     <None Include="Resources\flame.frag" />
@@ -136,6 +139,11 @@
     <None Include="Resources\rain.vert" />
     <None Include="Resources\smoke.frag" />
     <None Include="Resources\smoke.vert" />
+    <None Include="Resources\tableCloth.obj" />
+    <None Include="Resources\tableTop.obj" />
+    <None Include="Resources\wineBottle.obj" />
+    <None Include="Resources\wineBottleLabel.obj" />
+    <None Include="Resources\wineBottleShutter.obj" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resourcen.resx">

@@ -63,9 +63,9 @@ void main()
 
     // flame parameters
 	float strength = 1.0 + clamp(wind_dir.x + wind_dir.z, 0.0, 1.0);
-    float speed = 2.0;// + clamp(wind_dir.x + wind_dir.z, 0.0, 2.0);
+    float speed = 2.0 + clamp(abs(wind_dir.x) + abs(wind_dir.z), 0.0, 1.0);
     float disort_ver = wind_x + wind_z;
-    float disort_hor = disort_ver;// + sign(-disort_ver) * sin(camElevation * 0.00556 * PI);
+    float disort_hor = disort_ver + sign(-(disort_ver+.0001)) * sin(camElevation * 0.00556 * PI * .5);
 
 	// create horizonatal 'anti' movement to balance out horizontal distortion
 	flameCoord.x -= disort_ver * .45;
@@ -82,7 +82,7 @@ void main()
 
     // create the flame...
 	float flame = fbm_ * shape * height;
-	flame=clamp(flame,0.,1.);
+	flame = clamp(flame,0.,1.);
 	    
     // clamp top
     if(flameCoord.y < -0.25)

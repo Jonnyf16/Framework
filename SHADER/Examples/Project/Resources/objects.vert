@@ -3,6 +3,7 @@
 uniform mat4 camera;
 uniform mat4 light;
 uniform int id;
+uniform int noShadow;
 uniform vec3 cameraPosition;
 
 in vec4 position;
@@ -33,7 +34,7 @@ void main()
 	**/
 	
 	// objects
-	if (2 == id || 3 == id)
+	if (2 == id || 3 == id || 4 == id)
 	{
 		pos = 0.3 * position.xyz + instancePosition;
 		shadowLightPosition = light * vec4(pos, position.w);
