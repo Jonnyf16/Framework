@@ -23,6 +23,7 @@ namespace Example
         private VAO tableLegs;
         private VAO candle;
         private VAO plate;
+        private VAO grapePlate;
         private VAO wineBottle;
         private VAO wineBottleLabel;
         private VAO wineBottleShutter;
@@ -130,6 +131,11 @@ namespace Example
                 // plate
                 Mesh plateMesh = Obj2Mesh.FromObj(Resourcen.plate);
                 this.plate = VAOLoader.FromMesh(plateMesh, shader);
+                // grape plate
+                var xform = new Transformation();
+                xform.ScaleGlobal(new System.Numerics.Vector3(.8f));
+                Mesh grapePlateMesh = Obj2Mesh.FromObj(Resourcen.plate);
+                this.grapePlate = VAOLoader.FromMesh(grapePlateMesh.Transform(xform), shader);
                 // wine bottle
                 Mesh wineBottleMesh = Obj2Mesh.FromObj(Resourcen.wineBottle);
                 this.wineBottle = VAOLoader.FromMesh(wineBottleMesh, shader);
@@ -146,10 +152,10 @@ namespace Example
                 Mesh knifeLeftMesh = Obj2Mesh.FromObj(Resourcen.knife);
                 this.knifeLeft = VAOLoader.FromMesh(knifeLeftMesh, shader);
                 // knife right
-                var xform = new Transformation();
-                xform.RotateYGlobal(180f);
+                var xform_ = new Transformation();
+                xform_.RotateYGlobal(180f);
                 Mesh knifeRightMesh = Obj2Mesh.FromObj(Resourcen.knife);
-                this.knifeRight = VAOLoader.FromMesh(knifeRightMesh.Transform(xform), shader);
+                this.knifeRight = VAOLoader.FromMesh(knifeRightMesh.Transform(xform_), shader);
                 // fork left
                 Mesh forkLeftMesh = Obj2Mesh.FromObj(Resourcen.fork);
                 this.forkLeft = VAOLoader.FromMesh(forkLeftMesh, shader);
@@ -157,7 +163,7 @@ namespace Example
                 Mesh forkRightMesh = Obj2Mesh.FromObj(Resourcen.fork);
                 this.forkRight = VAOLoader.FromMesh(forkRightMesh.Transform(xform), shader);
                 // light sphere
-                Mesh lightSphereMesh = Meshes.CreateSphere(0.1f, 4);
+                Mesh lightSphereMesh = Meshes.CreateSphere(.1f, 4);
                 this.lightSphere = VAOLoader.FromMesh(lightSphereMesh, shader);
                 // environment sphere
                 var sphere = Meshes.CreateSphere(3, 4);
@@ -190,7 +196,7 @@ namespace Example
             this.candle.SetAttribute(shaderObject.GetAttributeLocation("instancePosition"), new Vector3[] { this.candlePosition }, VertexAttribPointerType.Float, 3, true);
             this.plate.SetAttribute(shaderObject.GetAttributeLocation("instancePosition"), new Vector3[] { this.plateLeftPosition }, VertexAttribPointerType.Float, 3, true);
             this.plate.SetAttribute(shaderObject.GetAttributeLocation("instancePosition"), new Vector3[] { this.plateRightPosition }, VertexAttribPointerType.Float, 3, true);
-            this.plate.SetAttribute(shaderObject.GetAttributeLocation("instancePosition"), new Vector3[] { this.plateGrapePosition }, VertexAttribPointerType.Float, 3, true);
+            this.grapePlate.SetAttribute(shaderObject.GetAttributeLocation("instancePosition"), new Vector3[] { this.plateGrapePosition }, VertexAttribPointerType.Float, 3, true);
             this.grapes.SetAttribute(shaderObject.GetAttributeLocation("instancePosition"), new Vector3[] { this.grapePosition }, VertexAttribPointerType.Float, 3, true);
             this.wineBottle.SetAttribute(shaderObject.GetAttributeLocation("instancePosition"), new Vector3[] { this.wineBottlePosition }, VertexAttribPointerType.Float, 3, true);
             this.wineBottleLabel.SetAttribute(shaderObject.GetAttributeLocation("instancePosition"), new Vector3[] { this.wineBottlePosition }, VertexAttribPointerType.Float, 3, true);
@@ -213,7 +219,7 @@ namespace Example
             var factor = 1;
             if (smokeState)
                 factor = 4;
-            float candleFlickering = (float)Math.Sin((elapsedTime / 1000 / factor) + (0.2 + random.NextDouble())) / 30 * factor;
+            float candleFlickering = (float)Math.Sin((elapsedTime / 1000 / factor) + (.2 + random.NextDouble())) / 30 * factor;
             // setup light for shadow 
             cameraLight.Distance = 1.1f + candleFlickering;
             var light = cameraLight.CalcMatrix().ToOpenTK();
@@ -248,8 +254,8 @@ namespace Example
                 candleLightStrength = 0.6f;
             GL.Uniform3(shader.GetUniformLocation("moonLightDirection"), new Vector3(0, -10, 10).Normalized());
             GL.Uniform4(shader.GetUniformLocation("moonLightColor"), new Color4(.05f, .05f, .25f, 1f));
-            GL.Uniform3(shader.GetUniformLocation("candleLightPosition"), new Vector3(0, 0.5f, 0));
-            GL.Uniform4(shader.GetUniformLocation("candleLightColor"), new Color4(candleLightStrength + candleFlickering, 0.6f * (candleLightStrength + candleFlickering), 0f, 1.0f));
+            GL.Uniform3(shader.GetUniformLocation("candleLightPosition"), new Vector3(0, .5f, 0));
+            GL.Uniform4(shader.GetUniformLocation("candleLightColor"), new Color4(candleLightStrength + candleFlickering, .6f * (candleLightStrength + candleFlickering), 0f, 1f));
             GL.Uniform3(shader.GetUniformLocation("spotLightPosition"), lightPosition.Normalized());
             GL.Uniform3(shader.GetUniformLocation("spotLightDirection"), new Vector3(lightPosition[0] * (-1), -1.1f, lightPosition[2] * (-1)).Normalized());
             GL.Uniform1(shader.GetUniformLocation("spotLightAngle"), DMS.Geometry.MathHelper.DegreesToRadians(10f));
@@ -294,12 +300,12 @@ namespace Example
             this.plate.SetAttribute(shader.GetAttributeLocation("materialColor"), new Color4[] { new Color4(1f, 1f, 1f, 1f) }, VertexAttribPointerType.Float, 4, true);
             this.plate.Draw();
             // grape plate
-            this.plate.SetAttribute(shader.GetAttributeLocation("instancePosition"), new Vector3[] { this.plateGrapePosition }, VertexAttribPointerType.Float, 3, true);
-            this.plate.SetAttribute(shader.GetAttributeLocation("materialColor"), new Color4[] { new Color4(.8f, .8f, .8f, 1f) }, VertexAttribPointerType.Float, 4, true);
-            this.plate.Draw();
+            this.grapePlate.SetAttribute(shader.GetAttributeLocation("instancePosition"), new Vector3[] { this.plateGrapePosition }, VertexAttribPointerType.Float, 3, true);
+            this.grapePlate.SetAttribute(shader.GetAttributeLocation("materialColor"), new Color4[] { new Color4(1f, 1f, 1f, 1f) }, VertexAttribPointerType.Float, 4, true);
+            this.grapePlate.Draw();
             // wine bottle
             this.wineBottle.SetAttribute(shader.GetAttributeLocation("instancePosition"), new Vector3[] { this.wineBottlePosition }, VertexAttribPointerType.Float, 3, true);
-            this.wineBottle.SetAttribute(shader.GetAttributeLocation("materialColor"), new Color4[] { new Color4(0.1f, 0.4f, 0.1f, 1f) }, VertexAttribPointerType.Float, 4, true);
+            this.wineBottle.SetAttribute(shader.GetAttributeLocation("materialColor"), new Color4[] { new Color4(.1f, .4f, .1f, 1f) }, VertexAttribPointerType.Float, 4, true);
             this.wineBottle.Draw();
             // wine bottle label
             this.wineBottleLabel.SetAttribute(shader.GetAttributeLocation("instancePosition"), new Vector3[] { this.wineBottlePosition }, VertexAttribPointerType.Float, 3, true);
@@ -307,7 +313,7 @@ namespace Example
             this.wineBottleLabel.Draw();
             // wine bottle shutter
             this.wineBottleShutter.SetAttribute(shader.GetAttributeLocation("instancePosition"), new Vector3[] { this.wineBottlePosition }, VertexAttribPointerType.Float, 3, true);
-            this.wineBottleShutter.SetAttribute(shader.GetAttributeLocation("materialColor"), new Color4[] { new Color4(.36f, .06f, .06f, 1f) }, VertexAttribPointerType.Float, 4, true);
+            this.wineBottleShutter.SetAttribute(shader.GetAttributeLocation("materialColor"), new Color4[] { new Color4(0f, 0f, 0f, 1f) }, VertexAttribPointerType.Float, 4, true);
             this.wineBottleShutter.Draw();
             // grapes
             this.grapes.SetAttribute(shader.GetAttributeLocation("instancePosition"), new Vector3[] { this.grapePosition }, VertexAttribPointerType.Float, 3, true);
