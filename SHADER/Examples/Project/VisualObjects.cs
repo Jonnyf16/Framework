@@ -161,7 +161,7 @@ namespace Example
                 this.forkLeft = VAOLoader.FromMesh(forkLeftMesh, shader);
                 // fork right
                 Mesh forkRightMesh = Obj2Mesh.FromObj(Resourcen.fork);
-                this.forkRight = VAOLoader.FromMesh(forkRightMesh.Transform(xform), shader);
+                this.forkRight = VAOLoader.FromMesh(forkRightMesh.Transform(xform_), shader);
                 // light sphere
                 Mesh lightSphereMesh = Meshes.CreateSphere(.1f, 4);
                 this.lightSphere = VAOLoader.FromMesh(lightSphereMesh, shader);
