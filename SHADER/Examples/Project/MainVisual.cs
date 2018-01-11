@@ -83,15 +83,15 @@ namespace Example
             this.visualObjects.Render(cam);
             this.visualSmoke.Render(cam);
             this.visualRain.Render(cam);
-            this.visualFlame.Render(cam, app.GameWindow.Height, app.GameWindow.Width, camera.Elevation ,camera.Azimuth);
+            this.visualFlame.Render(cam, app.GameWindow.Height, app.GameWindow.Width, camera.Elevation ,camera.Azimuth, this.smokeState);
 
             glTimerRender.Deactivate();
 
-            Console.Write("Update:");
-            Console.Write(glTimerUpdate.ResultLong / 1e6);
-            Console.Write("msec  Render:");
-            Console.Write(glTimerRender.ResultLong / 1e6);
-            Console.WriteLine("msec");
+            //Console.Write("Update:");
+            //Console.Write(glTimerUpdate.ResultLong / 1e6);
+            //Console.Write("msec  Render:");
+            //Console.Write(glTimerRender.ResultLong / 1e6);
+            //Console.WriteLine("msec");
         }
 
         private void checkSmoke()

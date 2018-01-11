@@ -3,6 +3,7 @@
 uniform float iGlobalTime;
 uniform float camElevation;
 uniform float camAzimuth;
+uniform float smokeState;
 in vec3 wind_dir;
 
 out vec4 fragColor;
@@ -62,10 +63,10 @@ void main()
 	float wind_z = clamp(wind_dir.z, -2, 2) * cos((camAzimuth * 0.00556 - 0.5) * PI);
 
     // flame parameters
-	float strength = 1.0 + clamp(wind_dir.x + wind_dir.z, 0.0, 1.0);
-    float speed = 2.0 + clamp(abs(wind_dir.x) + abs(wind_dir.z), 0.0, 1.0);
+	float strength = 1.0 + clamp(wind_dir.x + wind_dir.z, 0.0, 1.0) + 2.0 * smokeState;
+    float speed = 2.0 + clamp(abs(wind_dir.x) + abs(wind_dir.z), 0.0, 1.0) + 2.0 * smokeState;
     float disort_ver = wind_x + wind_z;
-    float disort_hor = disort_ver + sign(-(disort_ver+.0001)) * sin(camElevation * 0.00556 * PI * .5);
+    float disort_hor = disort_ver + sign(-(disort_ver+.0001)) * sin(camElevation * 0.00556 * PI * .5) + sign(-(disort_ver+.0001)) * smokeState;
 
 	// create horizonatal 'anti' movement to balance out horizontal distortion
 	flameCoord.x -= disort_ver * .45;

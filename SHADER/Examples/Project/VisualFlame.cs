@@ -26,14 +26,15 @@ namespace Example
      
         }
 
-		public void Update(Vector3 firePosition, Vector3 windDirection)
+		public void Update( Vector3 firePosition, Vector3 windDirection)
 		{
             if (ReferenceEquals(this.shaderFlame, null)) return;
             this.flame.SetAttribute(this.shaderFlame.GetAttributeLocation("instance_position"), new Vector3[] { firePosition }, VertexAttribPointerType.Float, 3);
             this.flame.SetAttribute(this.shaderFlame.GetAttributeLocation("wind_direction"), new Vector3[] { windDirection }, VertexAttribPointerType.Float, 3);
+            //this.flame.SetAttribute(this.shaderFlame.GetUniformLocation("smoke_state"), new uint[] { Convert.ToUInt32(smokeState) }, VertexAttribPointerType.UnsignedInt, 1);
         }
 
-        public void Render(Matrix4 camera, int windowHeight, int windowWidth, float camElevation, float camAzimuth)
+        public void Render(Matrix4 camera, int windowHeight, int windowWidth, float camElevation, float camAzimuth, bool smokeState)
         {
             if (ReferenceEquals(this.shaderFlame, null)) return;
 
@@ -50,6 +51,7 @@ namespace Example
             GL.UniformMatrix4(this.shaderFlame.GetUniformLocation("camera"), true, ref camera);
             GL.Uniform1(this.shaderFlame.GetUniformLocation("camElevation"), camElevation);
             GL.Uniform1(this.shaderFlame.GetUniformLocation("camAzimuth"), camAzimuth);
+            GL.Uniform1(this.shaderFlame.GetUniformLocation("smokeState"), (float)Convert.ToDouble(smokeState));
             this.flame.Activate();
             GL.DrawArrays(PrimitiveType.Points, 0, 1);
             this.flame.Deactivate();
