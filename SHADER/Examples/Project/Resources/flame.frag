@@ -1,6 +1,7 @@
 #version 430 core
 
 uniform float iGlobalTime;
+uniform float camElevation;
 uniform float camAzimuth;
 in vec3 wind_dir;
 
@@ -62,9 +63,9 @@ void main()
 
     // flame parameters
 	float strength = 1.0 + clamp(wind_dir.x + wind_dir.z, 0.0, 1.0);
-    float speed = 3.0 + clamp(wind_dir.x + wind_dir.z, 0.0, 2.0);
+    float speed = 2.0;// + clamp(wind_dir.x + wind_dir.z, 0.0, 2.0);
     float disort_ver = wind_x + wind_z;
-    float disort_hor = disort_ver;
+    float disort_hor = disort_ver;// + sign(-disort_ver) * sin(camElevation * 0.00556 * PI);
 
 	// create horizonatal 'anti' movement to balance out horizontal distortion
 	flameCoord.x -= disort_ver * .45;

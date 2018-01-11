@@ -33,7 +33,7 @@ namespace Example
             this.flame.SetAttribute(this.shaderFlame.GetAttributeLocation("wind_direction"), new Vector3[] { windDirection }, VertexAttribPointerType.Float, 3);
         }
 
-        public void Render(Matrix4 camera, int windowHeight, int windowWidth, float camAzimuth)
+        public void Render(Matrix4 camera, int windowHeight, int windowWidth, float camElevation, float camAzimuth)
         {
             if (ReferenceEquals(this.shaderFlame, null)) return;
 
@@ -48,6 +48,7 @@ namespace Example
             GL.Uniform1(this.shaderFlame.GetUniformLocation("iGlobalTime"), (float)timeSource.Elapsed.TotalSeconds);
             GL.Uniform2(this.shaderFlame.GetUniformLocation("iResolution"), new Vector2(windowHeight, windowWidth));
             GL.UniformMatrix4(this.shaderFlame.GetUniformLocation("camera"), true, ref camera);
+            GL.Uniform1(this.shaderFlame.GetUniformLocation("camElevation"), camElevation);
             GL.Uniform1(this.shaderFlame.GetUniformLocation("camAzimuth"), camAzimuth);
             this.flame.Activate();
             GL.DrawArrays(PrimitiveType.Points, 0, 1);

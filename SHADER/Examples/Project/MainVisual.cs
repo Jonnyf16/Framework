@@ -81,7 +81,7 @@ namespace Example
             this.visualObjects.Render(cam);
             this.visualSmoke.Render(cam);
             this.visualRain.Render(cam);
-            this.visualFlame.Render(cam, app.GameWindow.Height, app.GameWindow.Width, camera.Azimuth);
+            this.visualFlame.Render(cam, app.GameWindow.Height, app.GameWindow.Width, camera.Elevation ,camera.Azimuth);
 
             glTimerRender.Deactivate();
 
