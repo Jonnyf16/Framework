@@ -300,11 +300,15 @@ namespace Example
             this.tableCloth.Draw();
             //tableCloth_tex.Deactivate();
             // table
+            id = 4;
+            GL.Uniform1(shader.GetUniformLocation("id"), id);
             this.table.SetAttribute(shader.GetAttributeLocation("instancePosition"), new Vector3[] { this.tablePosition }, VertexAttribPointerType.Float, 3, true);
             this.table.SetAttribute(shader.GetAttributeLocation("materialColor"), new Color4[] { new Color4(1f, 1f, 1f, 1f) }, VertexAttribPointerType.Float, 4, true);
             this.table.Draw();
             // candle
             //candle_tex.Activate();
+            id = 3;
+            GL.Uniform1(shader.GetUniformLocation("id"), id);
             this.candle.SetAttribute(shader.GetAttributeLocation("instancePosition"), new Vector3[] { this.candlePosition }, VertexAttribPointerType.Float, 3, true);
             this.candle.SetAttribute(shader.GetAttributeLocation("materialColor"), new Color4[] { new Color4(1f, 1f, 1f, 1f) }, VertexAttribPointerType.Float, 4, true);
             this.candle.Draw();

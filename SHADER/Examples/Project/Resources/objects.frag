@@ -68,7 +68,7 @@ void main()
 		color = texture(tex, projectLongLat(dir));
 	}
 	// objects
-	if (2 == id || 3 == id)
+	if (2 == id || 3 == id || 4 == id)
 	{
 		
 		
@@ -93,7 +93,8 @@ void main()
 		}
 
 		// candle light (point light)
-		if (point_light)
+		// objects with id=4 are excluded
+		if (point_light && id != 4)
 		{
 			vec3 normal = normalize(n);
 			vec3 v = normalize(cameraPosition - pos);
@@ -102,6 +103,8 @@ void main()
 			//point light
 			candleLight = candleLightColor * (ambientLightColor + candleLightColor * lambert(n, l)) + candleLightColor * specular(n, l, v, 100);
 		}
+		else
+			candleLight = vec4(0);
 
 		//spot light
 		if (spot_light)

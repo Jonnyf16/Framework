@@ -34,7 +34,7 @@ void main()
 	**/
 	
 	// objects
-	if (2 == id || 3 == id)
+	if (2 == id || 3 == id || 4 == id)
 	{
 		pos = 0.3 * position.xyz + instancePosition;
 		shadowLightPosition = light * vec4(pos, position.w);
