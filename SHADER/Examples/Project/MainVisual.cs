@@ -62,6 +62,7 @@ namespace Example
 		{
             KeyboardEvent();
             checkRainCandleCollision();
+            checkToWindy();
             glTimerUpdate.Activate(QueryTarget.TimeElapsed);
             this.visualSmoke.Update(time, this.smokeState, this.smokePosition, this.windDirection);
             this.visualRain.Update(time, this.rainState, this.rainPosition, this.windDirection);
@@ -104,6 +105,14 @@ namespace Example
             //Console.WriteLine("RainPosition: [{0}, {1}]", rainPosition[0], rainPosition[2]);
             //Console.WriteLine("CandlePosition: [{0}, {1}]", candlePosition[0], candlePosition[2]);
             //Console.WriteLine("Rain meets Candle: {0}", smokeState);
+        }
+
+        private void checkToWindy()
+        {
+            if (windDirection[0] > 0.5 || windDirection[0] < -0.5 || windDirection[2] > 0.5 || windDirection[2] < -0.5)
+                this.smokeState = true;
+            else
+                this.smokeState = false;
         }
 
         private void KeyboardEvent()
