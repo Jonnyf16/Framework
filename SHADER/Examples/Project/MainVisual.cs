@@ -61,8 +61,7 @@ namespace Example
 		public void Update(float time)
 		{
             KeyboardEvent();
-            checkRainCandleCollision();
-            checkToWindy();
+            checkSmoke();
             glTimerUpdate.Activate(QueryTarget.TimeElapsed);
             this.visualSmoke.Update(time, this.smokeState, this.smokePosition, this.windDirection);
             this.visualRain.Update(time, this.rainState, this.rainPosition, this.windDirection);
@@ -91,13 +90,16 @@ namespace Example
 			Console.WriteLine("msec");
 		}
 
-        private void checkRainCandleCollision()
+        private void checkSmoke()
         {
             if (candleState && rainState)
             {
                 // check if rain is above candle
-                if (((rainPosition[0] + windDirection[0]) > (candlePosition[0] - candleThickness)) && ((rainPosition[0] + windDirection[0]) < candlePosition[0] + candleThickness) &&
-                    ((rainPosition[2] + windDirection[2]) > (candlePosition[2] - candleThickness)) && ((rainPosition[2] + windDirection[2]) < candlePosition[2] + candleThickness))
+                if (((rainPosition[0] + windDirection[0]) > (candlePosition[0] + lightPosition[0] - candleThickness)) && ((rainPosition[0] + windDirection[0]) < candlePosition[0] + lightPosition[0] + candleThickness) &&
+                    ((rainPosition[2] + windDirection[2]) > (candlePosition[2] + lightPosition[2] - candleThickness)) && ((rainPosition[2] + windDirection[2]) < candlePosition[2] + lightPosition[2] + candleThickness))
+                    this.smokeState = true;
+                // check if wind is too strong
+                else if (windDirection[0] > .7 || windDirection[0] < -.7 || windDirection[2] > .7 || windDirection[2] < -.7)
                     this.smokeState = true;
                 else
                     this.smokeState = false;
@@ -105,14 +107,6 @@ namespace Example
             //Console.WriteLine("RainPosition: [{0}, {1}]", rainPosition[0], rainPosition[2]);
             //Console.WriteLine("CandlePosition: [{0}, {1}]", candlePosition[0], candlePosition[2]);
             //Console.WriteLine("Rain meets Candle: {0}", smokeState);
-        }
-
-        private void checkToWindy()
-        {
-            if (windDirection[0] > 0.5 || windDirection[0] < -0.5 || windDirection[2] > 0.5 || windDirection[2] < -0.5)
-                this.smokeState = true;
-            else
-                this.smokeState = false;
         }
 
         private void KeyboardEvent()
