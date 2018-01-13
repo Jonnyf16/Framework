@@ -17,7 +17,7 @@ namespace Example
             this.app = app;
 
             // light setup
-            this.lightPosition = new Vector3(0, 0.5f, 0);
+            this.lightPosition = new Vector3(0, 1.1f, 0);
 
             // wind setup
             this.windDirection = new Vector3(0.0f);
