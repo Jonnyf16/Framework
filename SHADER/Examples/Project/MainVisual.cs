@@ -96,13 +96,13 @@ namespace Example
 
         private void checkSmoke()
         {
-            if (candleState && rainState)
+            if (rainState)
             {
                 // check if rain is above candle
-                if (((rainPosition[0] + windDirection[0] * (rainPosition[1] - lightPosition[1])) > (candlePosition[0] + lightPosition[0] - candleThickness)) &&
-                    ((rainPosition[0] + windDirection[0] * (rainPosition[1] - lightPosition[1])) < candlePosition[0] + lightPosition[0] + candleThickness) &&
-                    ((rainPosition[2] + windDirection[2] * (rainPosition[1] - lightPosition[1])) > (candlePosition[2] + lightPosition[2] - candleThickness)) &&
-                    ((rainPosition[2] + windDirection[2] * (rainPosition[1] - lightPosition[1])) < candlePosition[2] + lightPosition[2] + candleThickness))
+                if (((rainPosition[0] + windDirection[0] * (rainPosition[1] - firePosition[1])) > (candlePosition[0] + firePosition[0] - candleThickness)) &&
+                    ((rainPosition[0] + windDirection[0] * (rainPosition[1] - firePosition[1])) < candlePosition[0] + firePosition[0] + candleThickness) &&
+                    ((rainPosition[2] + windDirection[2] * (rainPosition[1] - firePosition[1])) > (candlePosition[2] + firePosition[2] - candleThickness)) &&
+                    ((rainPosition[2] + windDirection[2] * (rainPosition[1] - firePosition[1])) < candlePosition[2] + firePosition[2] + candleThickness))
                     this.smokeState = true;
                 else if (windDirection[0] > .7 || windDirection[0] < -.7 || windDirection[2] > .7 || windDirection[2] < -.7)
                     this.smokeState = true;
