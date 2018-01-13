@@ -17,6 +17,7 @@ namespace Example
         private bool rainState;
         private bool smokeState;
         private Stopwatch stopWatch = new Stopwatch();
+        private TimeSpan timeSpan;
         private VAO cloud;
         private VAO tableCloth;
         private VAO table;
@@ -39,7 +40,6 @@ namespace Example
         private Texture tableCloth_tex;
         private Texture candle_tex;
         private QueryObject glTimer = new QueryObject();
-        private TimeSpan timeSpan;
         private Random random = new Random();
         private FBO fboShadowMap = new FBOwithDepth(Texture.Create(12336, 12336, PixelInternalFormat.R32f, PixelFormat.Red, PixelType.Float));
         private CameraOrbit cameraLight = new CameraOrbit();
@@ -103,9 +103,10 @@ namespace Example
 
             // Camera Light
             cameraLight.FarClip = 50;
-            cameraLight.Distance = 1;
+            cameraLight.Distance = lightPosition[1];
             cameraLight.Elevation = 90;
             cameraLight.Azimuth = 0;
+            Console.WriteLine("POSITION: {0}", cameraLight.CalcPosition());
         }
 
 		public void ShaderChanged(string name, Shader shader)
@@ -221,7 +222,7 @@ namespace Example
                 factor = 4;
             float candleFlickering = (float)Math.Sin((elapsedTime / 1000 / factor) + (.2 + random.NextDouble())) / 30 * factor;
             // setup light for shadow 
-            cameraLight.Distance = 1.1f + candleFlickering;
+            cameraLight.Distance = this.lightPosition[1] + candleFlickering;
             var light = cameraLight.CalcMatrix().ToOpenTK();
             
             shaderShadow.Activate();

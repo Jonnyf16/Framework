@@ -17,7 +17,7 @@ namespace Example
             this.app = app;
 
             // light setup
-            this.lightPosition = new Vector3(0, 0.5f, 0);
+            this.lightPosition = new Vector3(0, 1.1f, 0);
 
             // wind setup
             this.windDirection = new Vector3(0.0f);
@@ -96,12 +96,17 @@ namespace Example
 
         private void checkSmoke()
         {
-            if (candleState && rainState)
+            if (candleState)
             {
-                // check if rain is above candle
-                if (((rainPosition[0] + windDirection[0]) > (candlePosition[0] + lightPosition[0] - candleThickness)) && ((rainPosition[0] + windDirection[0]) < candlePosition[0] + lightPosition[0] + candleThickness) &&
-                    ((rainPosition[2] + windDirection[2]) > (candlePosition[2] + lightPosition[2] - candleThickness)) && ((rainPosition[2] + windDirection[2]) < candlePosition[2] + lightPosition[2] + candleThickness))
-                    this.smokeState = true;
+                if (rainState)
+                {
+                    // check if rain is above candle
+                    if (((rainPosition[0] + windDirection[0]) > (candlePosition[0] + lightPosition[0] - candleThickness)) && ((rainPosition[0] + windDirection[0]) < candlePosition[0] + lightPosition[0] + candleThickness) &&
+                        ((rainPosition[2] + windDirection[2]) > (candlePosition[2] + lightPosition[2] - candleThickness)) && ((rainPosition[2] + windDirection[2]) < candlePosition[2] + lightPosition[2] + candleThickness))
+                        this.smokeState = true;
+                    else
+                        this.smokeState = false;
+                }
                 // check if wind is too strong
                 else if (windDirection[0] > .7 || windDirection[0] < -.7 || windDirection[2] > .7 || windDirection[2] < -.7)
                     this.smokeState = true;
