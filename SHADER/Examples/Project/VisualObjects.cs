@@ -239,11 +239,31 @@ namespace Example
             GL.UniformMatrix4(shaderObject.GetUniformLocation("camera"), true, ref camera);
             GL.UniformMatrix4(shaderObject.GetUniformLocation("light"), true, ref light);
             this.DrawScene(shaderObject, camera, candleFlickering);
-
             fboShadowMap.Texture.Deactivate();
+            shaderObject.Deactivate();
+
+            // draw environment
+            shaderObject.Activate();
+            this.DrawEnvironment(shaderObject, camera);
             shaderObject.Deactivate();
         }
 
+        private void DrawEnvironment(Shader shader, Matrix4 camera)
+        {
+            // camera
+            GL.Uniform3(shader.GetUniformLocation("cameraPosition"), this.camera.CalcPosition().ToOpenTK());
+            GL.UniformMatrix4(shader.GetUniformLocation("camera"), true, ref camera);
+
+            // environment
+            // different ids to differentiate spheres in fragment shader
+            var id = 1;
+            // variable that excludes object from shadow throwing
+            envMap_tex.Activate();
+            GL.Uniform1(shader.GetUniformLocation("id"), id);
+            this.environment.Draw();
+            envMap_tex.Deactivate();
+        }
+        
         private void DrawScene(Shader shader, Matrix4 camera, float candleFlickering)
         {
             //Console.WriteLine("Value " + candleFlickering);
@@ -267,18 +287,9 @@ namespace Example
             GL.Uniform3(shader.GetUniformLocation("cameraPosition"), this.camera.CalcPosition().ToOpenTK());
             GL.UniformMatrix4(shader.GetUniformLocation("camera"), true, ref camera);
 
-            // environment
-            // different ids to differentiate spheres in fragment shader
-            var id = 1;
-            // variable that excludes object from shadow throwing
             var noShadow = 1;
-            //envMap_tex.Activate();
-            GL.Uniform1(shader.GetUniformLocation("id"), id);
-            //this.environment.Draw();
-            //envMap_tex.Deactivate();
-
             // objects
-            id = 2;
+            var id = 2;
             GL.Uniform1(shader.GetUniformLocation("id"), id);
 
             // draw objects

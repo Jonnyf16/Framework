@@ -25,13 +25,12 @@ void main()
 	materialColor1 = materialColor;
 	pos = position.xyz;
 	
-	/**
 	// environment
 	if (1 == id)
 	{
 		gl_Position = camera * vec4(pos, 1.0);
 	}
-	**/
+	
 	
 	// objects
 	if (2 == id || 3 == id || 4 == id)
