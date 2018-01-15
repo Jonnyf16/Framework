@@ -72,8 +72,8 @@ void main()
 	{
 		
 		
-		bool dir_light = true;
-		bool point_light = true;
+		bool moon_light = true;
+		bool candle_light = true;
 		bool spot_light = false;
 		
 		vec4 moonLight = vec4(0.0);
@@ -87,21 +87,21 @@ void main()
 		vec4 ambientLight = ambientLightColor * materialColor1;
 
 		// moon light (directional light)
-		if (dir_light)
+		if (moon_light)
 		{
 			moonLight = materialColor1 * moonLightColor * lambert(normal, -moonLightDirection);
 		}
 
 		// candle light (point light)
 		// objects with id=4 are excluded
-		if (point_light && id != 4)
+		if (candle_light && id != 4)
 		{
 			vec3 normal = normalize(n);
 			vec3 v = normalize(cameraPosition - pos);
 			vec3 l = normalize(candleLightPosition - pos);
 
 			//point light
-			candleLight = candleLightColor * (ambientLightColor + candleLightColor * lambert(n, l)) + candleLightColor * specular(n, l, v, 100);
+			candleLight = materialColor1 * candleLightColor * (ambientLightColor + candleLightColor * lambert(n, l)) + materialColor1 * candleLightColor * specular(n, l, v, 100);
 		}
 		else
 			candleLight = vec4(0);
@@ -130,7 +130,7 @@ void main()
 				// shadow calculation
 		vec3 coord = shadowLightPosition.xyz / shadowLightPosition.w;
 		float depth = texture(texShadowMap, coord.xy * .5 + 0.5).r;
-		if (depth + 0.001 < coord.z && noShadow == 0)
+		if (depth + 0.0001 < coord.z && noShadow == 0)
 			color *= 0.3;
 	}
 }

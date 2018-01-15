@@ -65,13 +65,13 @@ namespace Example
             this.rainPosition = rainPosition;
             this.candlePosition = candlePosition;
             this.tablePosition = new Vector3(.0f, -1.42f, -.1f);
-            this.plateLeftPosition = new Vector3(.6f, -.02f, .0f);
-            this.plateRightPosition = new Vector3(-.6f, -.02f, .0f);
-            this.plateGrapePosition = new Vector3(0, -.02f, .4f);
-            this.wineBottlePosition = new Vector3(-.1f, -.02f, -.4f);
+            this.plateLeftPosition = new Vector3(.6f, -.015f, .0f);
+            this.plateRightPosition = new Vector3(-.6f, -.015f, .0f);
+            this.plateGrapePosition = new Vector3(0, -.015f, .4f);
+            this.wineBottlePosition = new Vector3(-.1f, -.015f, -.4f);
             this.grapePosition = new Vector3(.05f, -.04f, .35f);
-            this.knifeLeftPosition = new Vector3(-.6f, -.02f, .3f);
-            this.knifeRightPosition = new Vector3(.6f, -.02f, -.3f);
+            this.knifeLeftPosition = new Vector3(-.6f, -.015f, .3f);
+            this.knifeRightPosition = new Vector3(.6f, -.015f, -.3f);
             this.forkLeftPosition = new Vector3(-.6f, -.015f, -.3f);
             this.forkRightPosition = new Vector3(.6f, -.015f, .3f);
             this.lightPosition = lightPosition;
@@ -298,7 +298,7 @@ namespace Example
             {
                 GL.Uniform1(shader.GetUniformLocation("noShadow"), noShadow);
                 this.cloud.SetAttribute(shader.GetAttributeLocation("instancePosition"), new Vector3[] { this.rainPosition }, VertexAttribPointerType.Float, 3, true);
-                this.cloud.SetAttribute(shader.GetAttributeLocation("materialColor"), new Color4[] { new Color4(0.1f, 0.1f, 0.6f, 1f) }, VertexAttribPointerType.Float, 4, true);
+                this.cloud.SetAttribute(shader.GetAttributeLocation("materialColor"), new Color4[] { new Color4(1f, 1f, 1f, 1f) }, VertexAttribPointerType.Float, 4, true);
                 this.cloud.Draw();
             }
             noShadow = 0;
@@ -325,11 +325,11 @@ namespace Example
             this.wineBottleLabel.Draw();
             // wine bottle shutter
             this.wineBottleShutter.SetAttribute(shader.GetAttributeLocation("instancePosition"), new Vector3[] { this.wineBottlePosition }, VertexAttribPointerType.Float, 3, true);
-            this.wineBottleShutter.SetAttribute(shader.GetAttributeLocation("materialColor"), new Color4[] { new Color4(0f, 0f, 0f, 1f) }, VertexAttribPointerType.Float, 4, true);
+            this.wineBottleShutter.SetAttribute(shader.GetAttributeLocation("materialColor"), new Color4[] { new Color4(0.54f, 0.12f, 0.2f, 1f) }, VertexAttribPointerType.Float, 4, true);
             this.wineBottleShutter.Draw();
             // grapes
             this.grapes.SetAttribute(shader.GetAttributeLocation("instancePosition"), new Vector3[] { this.grapePosition }, VertexAttribPointerType.Float, 3, true);
-            this.grapes.SetAttribute(shader.GetAttributeLocation("materialColor"), new Color4[] { new Color4(0f, 1f, 0f, 1f) }, VertexAttribPointerType.Float, 4, true);
+            this.grapes.SetAttribute(shader.GetAttributeLocation("materialColor"), new Color4[] { new Color4(0.54f, .15f, 0.4f, 1f) }, VertexAttribPointerType.Float, 4, true);
             this.grapes.Draw();
             // knife right
             this.knifeRight.SetAttribute(shader.GetAttributeLocation("instancePosition"), new Vector3[] { this.knifeRightPosition }, VertexAttribPointerType.Float, 3, true);
