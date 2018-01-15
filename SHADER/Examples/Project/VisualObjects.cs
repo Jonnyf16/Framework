@@ -33,12 +33,9 @@ namespace Example
         private VAO knifeRight;
         private VAO forkLeft;
         private VAO forkRight;
-        private VAO lightSphere;
         private VAO environment;
         private CameraOrbit camera = new CameraOrbit();
         private Texture envMap_tex;
-        private Texture tableCloth_tex;
-        private Texture candle_tex;
         private QueryObject glTimer = new QueryObject();
         private Random random = new Random();
         private FBO fboShadowMap = new FBOwithDepth(Texture.Create(12336, 12336, PixelInternalFormat.R32f, PixelFormat.Red, PixelType.Float));
@@ -82,16 +79,6 @@ namespace Example
             envMap_tex.WrapMode(TextureWrapMode.MirroredRepeat);
             envMap_tex.FilterLinear();
 
-            // table texture
-            tableCloth_tex = TextureLoader.FromBitmap(Resourcen.tablecloth_tex);
-            tableCloth_tex.WrapMode(TextureWrapMode.MirroredRepeat);
-            tableCloth_tex.FilterLinear();
-
-            // candle texture
-            candle_tex = TextureLoader.FromBitmap(Resourcen.candle_tex);
-            candle_tex.WrapMode(TextureWrapMode.MirroredRepeat);
-            candle_tex.FilterLinear();
-
             GL.Enable(EnableCap.DepthTest);
 			GL.Enable(EnableCap.CullFace);
 
@@ -106,7 +93,6 @@ namespace Example
             cameraLight.Distance = lightPosition[1];
             cameraLight.Elevation = 90;
             cameraLight.Azimuth = 0;
-            Console.WriteLine("POSITION: {0}", cameraLight.CalcPosition());
         }
 
 		public void ShaderChanged(string name, Shader shader)
@@ -163,9 +149,6 @@ namespace Example
                 // fork right
                 Mesh forkRightMesh = Obj2Mesh.FromObj(Resourcen.fork);
                 this.forkRight = VAOLoader.FromMesh(forkRightMesh.Transform(xform_), shader);
-                // light sphere
-                Mesh lightSphereMesh = Meshes.CreateSphere(.1f, 4);
-                this.lightSphere = VAOLoader.FromMesh(lightSphereMesh, shader);
                 // environment sphere
                 var sphere = Meshes.CreateSphere(3, 4);
                 var envSphere = sphere.SwitchTriangleMeshWinding();
@@ -189,24 +172,6 @@ namespace Example
             this.candlePosition = candlePosition;
             this.lightPosition = lightPosition;
             this.smokeState = smokeState;
-            // TODO: delete following
-            this.cloud.SetAttribute(shaderObject.GetAttributeLocation("instancePosition"), new Vector3[] { this.rainPosition }, VertexAttribPointerType.Float, 3, true);
-            this.tableCloth.SetAttribute(shaderObject.GetAttributeLocation("instancePosition"), new Vector3[] { this.tablePosition }, VertexAttribPointerType.Float, 3, true);
-            this.tableCloth.SetAttribute(shaderObject.GetAttributeLocation("instancePosition"), new Vector3[] { this.tablePosition }, VertexAttribPointerType.Float, 3, true);
-            this.table.SetAttribute(shaderObject.GetAttributeLocation("instancePosition"), new Vector3[] { this.tablePosition }, VertexAttribPointerType.Float, 3, true);
-            this.candle.SetAttribute(shaderObject.GetAttributeLocation("instancePosition"), new Vector3[] { this.candlePosition }, VertexAttribPointerType.Float, 3, true);
-            this.plate.SetAttribute(shaderObject.GetAttributeLocation("instancePosition"), new Vector3[] { this.plateLeftPosition }, VertexAttribPointerType.Float, 3, true);
-            this.plate.SetAttribute(shaderObject.GetAttributeLocation("instancePosition"), new Vector3[] { this.plateRightPosition }, VertexAttribPointerType.Float, 3, true);
-            this.grapePlate.SetAttribute(shaderObject.GetAttributeLocation("instancePosition"), new Vector3[] { this.plateGrapePosition }, VertexAttribPointerType.Float, 3, true);
-            this.grapes.SetAttribute(shaderObject.GetAttributeLocation("instancePosition"), new Vector3[] { this.grapePosition }, VertexAttribPointerType.Float, 3, true);
-            this.wineBottle.SetAttribute(shaderObject.GetAttributeLocation("instancePosition"), new Vector3[] { this.wineBottlePosition }, VertexAttribPointerType.Float, 3, true);
-            this.wineBottleLabel.SetAttribute(shaderObject.GetAttributeLocation("instancePosition"), new Vector3[] { this.wineBottlePosition }, VertexAttribPointerType.Float, 3, true);
-            this.wineBottleShutter.SetAttribute(shaderObject.GetAttributeLocation("instancePosition"), new Vector3[] { this.wineBottlePosition }, VertexAttribPointerType.Float, 3, true);
-            this.knifeRight.SetAttribute(shaderObject.GetAttributeLocation("instancePosition"), new Vector3[] { this.knifeRightPosition }, VertexAttribPointerType.Float, 3, true);
-            this.knifeLeft.SetAttribute(shaderObject.GetAttributeLocation("instancePosition"), new Vector3[] { this.knifeLeftPosition }, VertexAttribPointerType.Float, 3, true);
-            this.forkRight.SetAttribute(shaderObject.GetAttributeLocation("instancePosition"), new Vector3[] { this.forkRightPosition }, VertexAttribPointerType.Float, 3, true);
-            this.forkLeft.SetAttribute(shaderObject.GetAttributeLocation("instancePosition"), new Vector3[] { this.forkLeftPosition }, VertexAttribPointerType.Float, 3, true);
-            this.lightSphere.SetAttribute(shaderObject.GetAttributeLocation("instancePosition"), new Vector3[] { this.lightPosition }, VertexAttribPointerType.Float, 3, true);
         }
 
         public void Render(Matrix4 camera)
@@ -347,32 +312,25 @@ namespace Example
             this.forkLeft.SetAttribute(shader.GetAttributeLocation("instancePosition"), new Vector3[] { this.forkLeftPosition }, VertexAttribPointerType.Float, 3, true);
             this.forkLeft.SetAttribute(shader.GetAttributeLocation("materialColor"), new Color4[] { new Color4(.5f, .5f, .5f, 1f) }, VertexAttribPointerType.Float, 4, true);
             this.forkLeft.Draw();
-            // light sphere
-            this.lightSphere.SetAttribute(shader.GetAttributeLocation("instancePosition"), new Vector3[] { this.lightPosition }, VertexAttribPointerType.Float, 3, true);
-            this.lightSphere.SetAttribute(shader.GetAttributeLocation("materialColor"), new Color4[] { new Color4(1f, 1f, 1f, 1f) }, VertexAttribPointerType.Float, 4, true);
-            this.lightSphere.Draw();
+            // candle
+            GL.Uniform1(shader.GetUniformLocation("id"), id);
+            this.candle.SetAttribute(shader.GetAttributeLocation("instancePosition"), new Vector3[] { this.candlePosition }, VertexAttribPointerType.Float, 3, true);
+            this.candle.SetAttribute(shader.GetAttributeLocation("materialColor"), new Color4[] { new Color4(1f, 1f, 1f, 1f) }, VertexAttribPointerType.Float, 4, true);
+            this.candle.Draw();
+
             // table
             id = 3;
             GL.Uniform1(shader.GetUniformLocation("id"), id);
-            //tableCloth_tex.Activate();
             this.tableCloth.SetAttribute(shader.GetAttributeLocation("instancePosition"), new Vector3[] { this.tablePosition }, VertexAttribPointerType.Float, 3, true);
             this.tableCloth.SetAttribute(shader.GetAttributeLocation("materialColor"), new Color4[] { new Color4(1f, 1f, 1f, 1f) }, VertexAttribPointerType.Float, 4, true);
             this.tableCloth.Draw();
-            //tableCloth_tex.Deactivate();
+
             // table
             id = 4;
             GL.Uniform1(shader.GetUniformLocation("id"), id);
             this.table.SetAttribute(shader.GetAttributeLocation("instancePosition"), new Vector3[] { this.tablePosition }, VertexAttribPointerType.Float, 3, true);
             this.table.SetAttribute(shader.GetAttributeLocation("materialColor"), new Color4[] { new Color4(1f, 1f, 1f, 1f) }, VertexAttribPointerType.Float, 4, true);
             this.table.Draw();
-            // candle
-            //candle_tex.Activate();
-            id = 3;
-            GL.Uniform1(shader.GetUniformLocation("id"), id);
-            this.candle.SetAttribute(shader.GetAttributeLocation("instancePosition"), new Vector3[] { this.candlePosition }, VertexAttribPointerType.Float, 3, true);
-            this.candle.SetAttribute(shader.GetAttributeLocation("materialColor"), new Color4[] { new Color4(1f, 1f, 1f, 1f) }, VertexAttribPointerType.Float, 4, true);
-            this.candle.Draw();
-            //candle_tex.Deactivate();
         }
     }
 }

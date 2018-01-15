@@ -2,7 +2,6 @@
 uniform int id;
 uniform int noShadow;
 uniform sampler2D tex;
-uniform sampler2D texShadowMap;
 uniform mat4 camera;
 uniform vec3 cameraPosition;
 uniform vec4 ambientLightColor;
@@ -38,7 +37,7 @@ float lambert(vec3 n, vec3 l)
 
 float specular(vec3 n, vec3 l, vec3 v, float shininess)
 {
-	// only specular when no texture
+	// only specular when dull
 	if (3 != id)
 	{
 		vec3 r = reflect(-l, n);
@@ -100,8 +99,8 @@ void main()
 			vec3 v = normalize(cameraPosition - pos);
 			vec3 l = normalize(candleLightPosition - pos);
 
-			//point light
-			candleLight = materialColor1 * candleLightColor * (ambientLightColor + candleLightColor * lambert(n, l)) + materialColor1 * candleLightColor * specular(n, l, v, 100);
+			//candle light
+			candleLight = materialColor1 * candleLightColor * (ambientLightColor + candleLightColor * lambert(normal, l)) + materialColor1 * candleLightColor * specular(normal, l, v, 100);
 		}
 		else
 			candleLight = vec4(0);
@@ -116,20 +115,11 @@ void main()
 			}
 		}
 
-		//combine
-		// objects without texture
-		//if (2 == id)
-			color = ambientLight + moonLight + candleLight + spotLight;
+		color = ambientLight + moonLight + candleLight + spotLight;
 		
-		/**
-		// objects with texture
-		if (3 == id)
-			color = texture(tex, uvs) * (ambientLight + moonLight + candleLight + spotLight);
-		**/
-		
-				// shadow calculation
+		// shadow calculation
 		vec3 coord = shadowLightPosition.xyz / shadowLightPosition.w;
-		float depth = texture(texShadowMap, coord.xy * .5 + 0.5).r;
+		float depth = texture(tex, coord.xy * .5 + 0.5).r;
 		if (depth + 0.0001 < coord.z && noShadow == 0)
 			color *= 0.3;
 	}
