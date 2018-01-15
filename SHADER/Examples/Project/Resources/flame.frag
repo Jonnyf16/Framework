@@ -54,7 +54,7 @@ void main()
     
     // set flame coordinates
     flameCoord.x -= 0.5;
-	flameCoord.y -= 0.12;
+	flameCoord.y -= 0.1;
 	flameCoord.x *= 5.0;
 	flameCoord.y *= 2.0;
 
@@ -64,18 +64,18 @@ void main()
 
     // flame parameters
 	float strength = 1.0 + clamp(wind_dir.x + wind_dir.z, 0.0, 1.0) + 2.0 * smokeState;
-    float speed = 2.0 + clamp(abs(wind_dir.x) + abs(wind_dir.z), 0.0, 1.0) + 2.0 * smokeState;
+    float speed = 2.5 + clamp(abs(wind_dir.x) + abs(wind_dir.z), 0.0, 1.0) + 2.0 * smokeState;
     float disort_ver = wind_x + wind_z;
     float disort_hor = disort_ver + sign(-(disort_ver+.0001)) * sin(camElevation * 0.00556 * PI * .5) + sign(-(disort_ver+.0001)) * smokeState;
 
 	// create horizonatal 'anti' movement to balance out horizontal distortion
-	flameCoord.x -= disort_ver * .45;
-    
+	flameCoord.x += -disort_ver * .45 + wind_x * smokeState * .1 + wind_z * smokeState * .1;
+
     // creates background noise
 	float fbm_ = fbm(strength * flameCoord - vec2(0, iGlobalTime * speed));
     
     // hight
-    float height = (1.0 - flameCoord.y * 0.55) * 2.0;
+    float height = (.75 - flameCoord.y * 0.55) * 2.0;
 
     // shape
     float shape_ = max(0.0, (length(flameCoord * vec2(1.0 + flameCoord.y * 2.5, 0.7 * disort_ver) - flameCoord.y * disort_hor)) - (fbm_ * max(0.0, flameCoord.y + 0.25)));
@@ -86,13 +86,13 @@ void main()
 	flame = clamp(flame,0.,1.);
 	    
     // clamp top
+    if(flameCoord.y > 1.36)
+        flame = 0.0;
+
+    // clamp bottom
     if(flameCoord.y < -0.25)
         flame = 0.0;
-    
-    // clamp bottom
-    if(flameCoord.y > 1.82)
-        flame = 0.0;
-    
+        
     // color
 	vec3 col = vec3(1.5 * flame, 1.5 * pow(flame, 3.0), pow(flame, 6.0));
 	fragColor = vec4(vec3(col), 1.0);

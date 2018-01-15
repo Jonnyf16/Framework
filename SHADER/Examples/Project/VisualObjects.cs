@@ -34,7 +34,6 @@ namespace Example
         private VAO forkLeft;
         private VAO forkRight;
         private VAO environment;
-        private CameraOrbit camera = new CameraOrbit();
         private Texture envMap_tex;
         private QueryObject glTimer = new QueryObject();
         private Random random = new Random();
@@ -161,8 +160,6 @@ namespace Example
             }
         }
 
-		public CameraOrbit Camera { get { return camera; } }
-
         public void Update(bool rainState, Vector3 rainPosition, Vector3 candlePosition, Vector3 lightPosition, bool smokeState)
         {
             if (ReferenceEquals(shaderObject, null)) return;
@@ -174,7 +171,7 @@ namespace Example
             this.smokeState = smokeState;
         }
 
-        public void Render(Matrix4 camera)
+        public void Render(CameraOrbit camera)
 		{
             if (ReferenceEquals(null, shaderObject)) return;
             if (ReferenceEquals(null, shaderShadow)) return;
@@ -194,14 +191,15 @@ namespace Example
             fboShadowMap.Activate();
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
             GL.UniformMatrix4(shaderShadow.GetUniformLocation("camera"), true, ref light);
-            this.DrawScene(shaderShadow, light, candleFlickering);
+            this.DrawScene(shaderShadow, cameraLight, candleFlickering);
             fboShadowMap.Deactivate();
             shaderShadow.Deactivate();
 
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
             shaderObject.Activate();
             fboShadowMap.Texture.Activate();
-            GL.UniformMatrix4(shaderObject.GetUniformLocation("camera"), true, ref camera);
+            var cam = camera.CalcMatrix().ToOpenTK();
+            GL.UniformMatrix4(shaderObject.GetUniformLocation("camera"), true, ref cam);
             GL.UniformMatrix4(shaderObject.GetUniformLocation("light"), true, ref light);
             this.DrawScene(shaderObject, camera, candleFlickering);
             fboShadowMap.Texture.Deactivate();
@@ -213,11 +211,12 @@ namespace Example
             shaderObject.Deactivate();
         }
 
-        private void DrawEnvironment(Shader shader, Matrix4 camera)
+        private void DrawEnvironment(Shader shader, CameraOrbit camera)
         {
             // camera
-            GL.Uniform3(shader.GetUniformLocation("cameraPosition"), this.camera.CalcPosition().ToOpenTK());
-            GL.UniformMatrix4(shader.GetUniformLocation("camera"), true, ref camera);
+            var cam = camera.CalcMatrix().ToOpenTK();
+            GL.Uniform3(shader.GetUniformLocation("cameraPosition"), camera.CalcPosition().ToOpenTK());
+            GL.UniformMatrix4(shader.GetUniformLocation("camera"), true, ref cam);
 
             // environment
             // different ids to differentiate spheres in fragment shader
@@ -229,7 +228,7 @@ namespace Example
             envMap_tex.Deactivate();
         }
         
-        private void DrawScene(Shader shader, Matrix4 camera, float candleFlickering)
+        private void DrawScene(Shader shader, CameraOrbit camera, float candleFlickering)
         {
             //Console.WriteLine("Value " + candleFlickering);
 
@@ -240,7 +239,7 @@ namespace Example
                 candleLightStrength = 0.6f;
             GL.Uniform3(shader.GetUniformLocation("moonLightDirection"), new Vector3(0, -10, 10).Normalized());
             GL.Uniform4(shader.GetUniformLocation("moonLightColor"), new Color4(.05f, .05f, .25f, 1f));
-            GL.Uniform3(shader.GetUniformLocation("candleLightPosition"), lightPosition);
+            GL.Uniform3(shader.GetUniformLocation("candleLightPosition"), new Vector3(0, .5f, 0));
             GL.Uniform4(shader.GetUniformLocation("candleLightColor"), new Color4(candleLightStrength + candleFlickering, .6f * (candleLightStrength + candleFlickering), 0f, 1f));
             GL.Uniform3(shader.GetUniformLocation("spotLightPosition"), lightPosition.Normalized());
             GL.Uniform3(shader.GetUniformLocation("spotLightDirection"), new Vector3(lightPosition[0] * (-1), -1.1f, lightPosition[2] * (-1)).Normalized());
@@ -249,8 +248,10 @@ namespace Example
             GL.Uniform4(shader.GetUniformLocation("ambientLightColor"), new Color4(0.1f, 0.1f, 0.2f, 1f));
 
             // camera
-            GL.Uniform3(shader.GetUniformLocation("cameraPosition"), this.camera.CalcPosition().ToOpenTK());
-            GL.UniformMatrix4(shader.GetUniformLocation("camera"), true, ref camera);
+            var cam = camera.CalcMatrix().ToOpenTK();
+            Console.WriteLine(camera.CalcPosition().ToOpenTK());
+            GL.Uniform3(shader.GetUniformLocation("cameraPosition"), camera.CalcPosition().ToOpenTK());
+            GL.UniformMatrix4(shader.GetUniformLocation("camera"), true, ref cam);
 
             var noShadow = 1;
             // objects

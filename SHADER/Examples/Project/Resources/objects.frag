@@ -100,7 +100,7 @@ void main()
 			vec3 l = normalize(candleLightPosition - pos);
 
 			//candle light
-			candleLight = materialColor1 * candleLightColor * (ambientLightColor + candleLightColor * lambert(normal, l)) + materialColor1 * candleLightColor * specular(normal, l, v, 100);
+			candleLight = materialColor1 * candleLightColor * lambert(normal, l) + candleLightColor * specular(normal, l, v, 100);
 		}
 		else
 			candleLight = vec4(0);

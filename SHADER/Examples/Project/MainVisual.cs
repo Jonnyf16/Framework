@@ -80,7 +80,7 @@ namespace Example
 			glTimerRender.Activate(QueryTarget.TimeElapsed);
 			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
             var cam = camera.CalcMatrix().ToOpenTK();
-            this.visualObjects.Render(cam);
+            this.visualObjects.Render(camera);
             this.visualSmoke.Render(cam);
             this.visualRain.Render(cam);
             this.visualFlame.Render(cam, app.GameWindow.Height, app.GameWindow.Width, camera.Elevation ,camera.Azimuth, this.smokeState);
