@@ -49,7 +49,7 @@ namespace Example
 
             // camera setup
             this.camera.FarClip = 80;
-            this.camera.Distance = 3;
+            this.camera.Distance = 2.5f;
             this.camera.FovY = 70;
             this.camera.Elevation = 15;
             this.camera.Azimuth = 0;
@@ -163,20 +163,6 @@ namespace Example
                 this.smokeState = true;
             if (keyboardState[Key.T])
                 this.smokeState = false;
-
-            // light movement
-            if (keyboardState[Key.Right])
-                this.lightPosition[0] += movingSpeed;
-            else if (keyboardState[Key.Left])
-                this.lightPosition[0] -= movingSpeed;
-            else if (keyboardState[Key.Down])
-                this.lightPosition[2] += movingSpeed;
-            else if (keyboardState[Key.Up])
-                this.lightPosition[2] -= movingSpeed;
-            else if (keyboardState[Key.PageDown])
-                this.lightPosition[1] -= movingSpeed;
-            else if (keyboardState[Key.PageUp])
-                this.lightPosition[1] += movingSpeed;
         }
 
         private CameraOrbit camera = new CameraOrbit();

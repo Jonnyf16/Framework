@@ -149,7 +149,7 @@ namespace Example
                 Mesh forkRightMesh = Obj2Mesh.FromObj(Resourcen.fork);
                 this.forkRight = VAOLoader.FromMesh(forkRightMesh.Transform(xform_), shader);
                 // environment sphere
-                var sphere = Meshes.CreateSphere(3, 4);
+                var sphere = Meshes.CreateSphere(6, 4);
                 var envSphere = sphere.SwitchTriangleMeshWinding();
                 this.environment = VAOLoader.FromMesh(envSphere, shader);
             }
@@ -224,6 +224,7 @@ namespace Example
             // variable that excludes object from shadow throwing
             envMap_tex.Activate();
             GL.Uniform1(shader.GetUniformLocation("id"), id);
+            this.environment.SetAttribute(shader.GetAttributeLocation("instancePosition"), new Vector3[] { new Vector3(0, 0, 0) }, VertexAttribPointerType.Float, 3, true);
             this.environment.Draw();
             envMap_tex.Deactivate();
         }
@@ -253,21 +254,11 @@ namespace Example
             GL.Uniform3(shader.GetUniformLocation("cameraPosition"), camera.CalcPosition().ToOpenTK());
             GL.UniformMatrix4(shader.GetUniformLocation("camera"), true, ref cam);
 
-            var noShadow = 1;
-            // objects
             var id = 2;
             GL.Uniform1(shader.GetUniformLocation("id"), id);
 
             // draw objects
-            // cloud
-            if (this.rainState)
-            {
-                GL.Uniform1(shader.GetUniformLocation("noShadow"), noShadow);
-                this.cloud.SetAttribute(shader.GetAttributeLocation("instancePosition"), new Vector3[] { this.rainPosition }, VertexAttribPointerType.Float, 3, true);
-                this.cloud.SetAttribute(shader.GetAttributeLocation("materialColor"), new Color4[] { new Color4(1f, 1f, 1f, 1f) }, VertexAttribPointerType.Float, 4, true);
-                this.cloud.Draw();
-            }
-            noShadow = 0;
+            var noShadow = 0;
             GL.Uniform1(shader.GetUniformLocation("noShadow"), noShadow);
             // plate 1
             this.plate.SetAttribute(shader.GetAttributeLocation("instancePosition"), new Vector3[] { this.plateLeftPosition }, VertexAttribPointerType.Float, 3, true);
@@ -319,15 +310,27 @@ namespace Example
             this.candle.SetAttribute(shader.GetAttributeLocation("materialColor"), new Color4[] { new Color4(1f, 1f, 1f, 1f) }, VertexAttribPointerType.Float, 4, true);
             this.candle.Draw();
 
-            // table
+            // table cloth
             id = 3;
             GL.Uniform1(shader.GetUniformLocation("id"), id);
             this.tableCloth.SetAttribute(shader.GetAttributeLocation("instancePosition"), new Vector3[] { this.tablePosition }, VertexAttribPointerType.Float, 3, true);
-            this.tableCloth.SetAttribute(shader.GetAttributeLocation("materialColor"), new Color4[] { new Color4(1f, 1f, 1f, 1f) }, VertexAttribPointerType.Float, 4, true);
+            this.tableCloth.SetAttribute(shader.GetAttributeLocation("materialColor"), new Color4[] { new Color4(0.27f, 0.19f, 0.125f, 1f) }, VertexAttribPointerType.Float, 4, true);
             this.tableCloth.Draw();
 
+            // cloud
+            if (this.rainState)
+            {
+                noShadow = 1;
+                GL.Uniform1(shader.GetUniformLocation("noShadow"), noShadow);
+                this.cloud.SetAttribute(shader.GetAttributeLocation("instancePosition"), new Vector3[] { this.rainPosition }, VertexAttribPointerType.Float, 3, true);
+                this.cloud.SetAttribute(shader.GetAttributeLocation("materialColor"), new Color4[] { new Color4(1f, 1f, 1f, 1f) }, VertexAttribPointerType.Float, 4, true);
+                this.cloud.Draw();
+            }
+            noShadow = 0;
+            GL.Uniform1(shader.GetUniformLocation("noShadow"), noShadow);
+
             // table
-            id = 4;
+            id = 3;
             GL.Uniform1(shader.GetUniformLocation("id"), id);
             this.table.SetAttribute(shader.GetAttributeLocation("instancePosition"), new Vector3[] { this.tablePosition }, VertexAttribPointerType.Float, 3, true);
             this.table.SetAttribute(shader.GetAttributeLocation("materialColor"), new Color4[] { new Color4(1f, 1f, 1f, 1f) }, VertexAttribPointerType.Float, 4, true);

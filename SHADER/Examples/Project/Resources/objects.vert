@@ -28,6 +28,7 @@ void main()
 	// environment
 	if (1 == id)
 	{
+		pos = position.xyz + instancePosition;
 		gl_Position = camera * vec4(pos, 1.0);
 	}
 	
