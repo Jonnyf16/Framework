@@ -140,7 +140,6 @@
     <None Include="Resources\smoke.frag" />
     <None Include="Resources\smoke.vert" />
     <None Include="Resources\tableCloth.obj" />
-    <None Include="Resources\tableTop.obj" />
     <None Include="Resources\wineBottle.obj" />
     <None Include="Resources\wineBottleLabel.obj" />
     <None Include="Resources\wineBottleShutter.obj" />
@@ -160,9 +159,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\rain_tex.png" />
-    <Content Include="Resources\candle_tex.jpg" />
     <Content Include="Resources\environment.jpg" />
-    <None Include="Resources\tablecloth_tex.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
