@@ -71,12 +71,12 @@ namespace Example {
         }
         
         /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
-        internal static System.Drawing.Bitmap candle_tex {
+        internal static byte[] chair {
             get {
-                object obj = ResourceManager.GetObject("candle_tex", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
+                object obj = ResourceManager.GetObject("chair", resourceCulture);
+                return ((byte[])(obj));
             }
         }
         
@@ -276,26 +276,6 @@ namespace Example {
         internal static byte[] tableCloth {
             get {
                 object obj = ResourceManager.GetObject("tableCloth", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap tablecloth_tex {
-            get {
-                object obj = ResourceManager.GetObject("tablecloth_tex", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Byte[].
-        /// </summary>
-        internal static byte[] tableTop {
-            get {
-                object obj = ResourceManager.GetObject("tableTop", resourceCulture);
                 return ((byte[])(obj));
             }
         }

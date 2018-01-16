@@ -118,11 +118,14 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="candle" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>resources\candle.obj;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="plane_frag" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\plane.frag;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="cloud" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>resources\cloud.obj;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="plane_vert" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\plane.vert;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="smoke" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\smoke_256a.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="smoke_frag" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>resources\smoke.frag;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -130,67 +133,10 @@
   <data name="smoke_vert" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>resources\smoke.vert;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="table" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>resources\table.obj;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="starAlpha" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\starAlpha.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="objects_frag" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>resources\objects.vert;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="objects_vert" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>resources\objects.frag;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="flame_frag" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>resources\flame.frag;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="flame_vert" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>resources\flame.vert;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="environment" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\environment.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="plate" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\plate.obj;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="rain_frag" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>resources\rain.frag;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="rain_tex" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>resources\rain_tex.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="rain_vert" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>resources\rain.vert;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="smoke_tex" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>resources\smoke_tex.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="shadow_frag" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>resources\shadow.frag;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="shadow_vert" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>resources\shadow.vert;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="fork" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>resources\fork.obj;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="knife" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>resources\knife.obj;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="tableCloth" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>resources\tablecloth.obj;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="grapes" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\grapes.obj;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="wineBottle" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>resources\winebottle.obj;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="wineBottleLabel" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>resources\winebottlelabel.obj;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="wineBottleShutter" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>resources\winebottleshutter.obj;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="chair" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>resources\chair.obj;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="water_splash" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\water_splash.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>
