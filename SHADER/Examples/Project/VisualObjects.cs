@@ -250,7 +250,6 @@ namespace Example
 
             // camera
             var cam = camera.CalcMatrix().ToOpenTK();
-            Console.WriteLine(camera.CalcPosition().ToOpenTK());
             GL.Uniform3(shader.GetUniformLocation("cameraPosition"), camera.CalcPosition().ToOpenTK());
             GL.UniformMatrix4(shader.GetUniformLocation("camera"), true, ref cam);
 

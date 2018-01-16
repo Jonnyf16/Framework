@@ -5,6 +5,7 @@ using OpenTK;
 using OpenTK.Input;
 using OpenTK.Graphics.OpenGL;
 using System;
+using System.Diagnostics;
 
 namespace Example
 {
@@ -15,7 +16,9 @@ namespace Example
 		public MainVisual(ExampleApplication app)
 		{
             this.app = app;
-
+            this.timeSource.Start();
+            
+            
             // light setup
             this.lightPosition = new Vector3(0, 1.1f, 0);
 
@@ -77,7 +80,7 @@ namespace Example
 
         public void Render()
 		{
-			glTimerRender.Activate(QueryTarget.TimeElapsed);
+            glTimerRender.Activate(QueryTarget.TimeElapsed);
 			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
             var cam = camera.CalcMatrix().ToOpenTK();
             this.visualObjects.Render(camera);
@@ -123,7 +126,8 @@ namespace Example
         {
             // Get current state
             keyboardState = OpenTK.Input.Keyboard.GetState();
-            float movingSpeed = 0.02f;
+            float movingSpeed = (this.timeSource.ElapsedMilliseconds - this.lastTime) * 0.001f;
+            this.lastTime = this.timeSource.ElapsedMilliseconds;
 
             // wind reset
             if (keyboardState[Key.O])
@@ -174,6 +178,8 @@ namespace Example
 		private QueryObject glTimerUpdate = new QueryObject();
 
         // new shit
+        private Stopwatch timeSource = new Stopwatch();
+        private long lastTime;
         private Random random = new Random();
         KeyboardState keyboardState;
         private bool rainState;
