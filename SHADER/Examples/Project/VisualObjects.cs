@@ -22,8 +22,6 @@ namespace Example
         private VAO tableCloth;
         private VAO table;
         private VAO tableLegs;
-        private VAO chairLeft;
-        private VAO chairRight;
         private VAO candle;
         private VAO plate;
         private VAO grapePlate;
@@ -44,8 +42,6 @@ namespace Example
 
         private Vector3 rainPosition;
         private Vector3 tablePosition;
-        private Vector3 chairLeftPosition;
-        private Vector3 chairRightPosition;
         private Vector3 lightPosition;
         private Vector3 candlePosition;
         private Vector3 plateLeftPosition;
@@ -64,8 +60,6 @@ namespace Example
             this.smokeState = false;
             this.rainPosition = rainPosition;
             this.candlePosition = candlePosition;
-            this.chairLeftPosition = new Vector3(-1.6f, -1.42f, .0f);
-            this.chairRightPosition = new Vector3(1.6f, -1.42f, -.3f);
             this.tablePosition = new Vector3(.0f, -1.42f, -.1f);
             this.plateLeftPosition = new Vector3(.6f, -.015f, .0f);
             this.plateRightPosition = new Vector3(-.6f, -.015f, .0f);
@@ -117,13 +111,6 @@ namespace Example
                 // table top
                 Mesh tableMesh = Obj2Mesh.FromObj(Resourcen.table);
                 this.table = VAOLoader.FromMesh(tableMesh, shader);
-                // chair left
-                Mesh chairMesh = Obj2Mesh.FromObj(Resourcen.chair);
-                this.chairLeft = VAOLoader.FromMesh(chairMesh, shader);
-                // chair right
-                var xformChair = new Transformation();
-                xformChair.RotateYGlobal(-150);
-                this.chairRight = VAOLoader.FromMesh(chairMesh.Transform(xformChair), shader);
                 // candle
                 Mesh candleMesh = Obj2Mesh.FromObj(Resourcen.candle);
                 this.candle = VAOLoader.FromMesh(candleMesh, shader);
@@ -327,15 +314,6 @@ namespace Example
             this.tableCloth.SetAttribute(shader.GetAttributeLocation("instancePosition"), new Vector3[] { this.tablePosition }, VertexAttribPointerType.Float, 3, true);
             this.tableCloth.SetAttribute(shader.GetAttributeLocation("materialColor"), new Color4[] { new Color4(0.27f, 0.19f, 0.125f, 1f) }, VertexAttribPointerType.Float, 4, true);
             this.tableCloth.Draw();
-
-            // chair left
-            this.chairLeft.SetAttribute(shader.GetAttributeLocation("instancePosition"), new Vector3[] { this.chairLeftPosition }, VertexAttribPointerType.Float, 3, true);
-            this.chairLeft.SetAttribute(shader.GetAttributeLocation("materialColor"), new Color4[] { new Color4(1f, 1f, 1f, 1f) }, VertexAttribPointerType.Float, 4, true);
-            this.chairLeft.Draw();
-            // chair right
-            this.chairRight.SetAttribute(shader.GetAttributeLocation("instancePosition"), new Vector3[] { this.chairRightPosition }, VertexAttribPointerType.Float, 3, true);
-            this.chairRight.SetAttribute(shader.GetAttributeLocation("materialColor"), new Color4[] { new Color4(1f, 1f, 1f, 1f) }, VertexAttribPointerType.Float, 4, true);
-            this.chairRight.Draw();
 
             // cloud
             if (this.rainState)
