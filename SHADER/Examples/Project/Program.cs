@@ -9,7 +9,8 @@ namespace Example
 	class Controller
 	{
 		[STAThread]
-		private static void Main()
+	 #	private static void Main()
+        äöälkjhhgf
 		{
             var windowHeight = 1280;
             var windowWidth = 720;
